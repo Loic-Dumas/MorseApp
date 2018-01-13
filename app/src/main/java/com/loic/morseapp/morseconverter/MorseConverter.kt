@@ -6,7 +6,9 @@ package com.loic.morseapp.morseconverter
  */
 class MorseConverter {
 
-    private val letterToMorse = hashMapOf('a' to ".-",
+    private val _letterToMorseArray = hashMapOf(
+            //letters
+            'a' to ".-",
             'b' to "-...",
             'c' to "-.-.",
             'd' to "-..",
@@ -32,6 +34,7 @@ class MorseConverter {
             'x' to "-..-",
             'y' to "-.--",
             'z' to "--..",
+            // numbers
             '0' to "-----",
             '1' to ".----",
             '2' to "..---",
@@ -42,6 +45,7 @@ class MorseConverter {
             '7' to "--...",
             '8' to "---..",
             '9' to "----.",
+            // symbols
             '!' to "-.-.--",
             '"' to ".-..-.",
             '$' to "...-..-",
@@ -57,11 +61,19 @@ class MorseConverter {
             ',' to "-.-.-.",
             '=' to "-...-",
             '?' to "..--..",
-            '@' to ".--.-."
+            '@' to ".--.-.",
+            // special letters
+            'à' to ".--.-",
+            'é' to "..-..",
+            'è' to ".-..-",
+            'ç' to "-.-..",
+            'ü' to "..--"
     )
 
 
-    private val morseToLetter = hashMapOf(".-" to 'a',
+    private val _morseToLetterArray = hashMapOf(
+            //letters
+            ".-" to 'a',
             "-..." to 'b',
             "-.-." to 'c',
             "-.." to 'd',
@@ -87,6 +99,7 @@ class MorseConverter {
             "-..-" to 'x',
             "-.--" to 'y',
             "--.." to 'z',
+            // numbers
             "-----" to '0',
             ".----" to '1',
             "..---" to '2',
@@ -97,6 +110,7 @@ class MorseConverter {
             "--..." to '7',
             "---.." to '8',
             "----." to '9',
+            // symbols
             "-.-.--" to '!',
             ".-..-." to '"',
             "...-..-" to '$',
@@ -112,25 +126,74 @@ class MorseConverter {
             "-.-.-." to ',',
             "-...-" to '=',
             "..--.." to '?',
-            ".--.-." to '@'
+            ".--.-." to '@',
+            // special letters
+            ".--.-" to 'à',
+            "..-.." to 'é',
+            ".-..-" to 'è',
+            "-.-.." to 'ç',
+            "..--" to 'ü'
     )
 
-
+    /**
+     * @return The text given in parameter into a string of morse code.
+     * If a letter isn't known, the letter isn't translated
+     */
     fun convertTextToMorse(text: String): String {
         var result = ""
 
         for (letter in text.toLowerCase()) {
-            result += letterToMorse[letter] + " "
+            val morseLetter = _letterToMorseArray[letter]
+            result += when {
+                morseLetter != null -> morseLetter + " "
+                letter.equals(" ") -> "     "
+                else -> letter + " "
+            }
         }
-        return result
+        return result.removeSuffix(" ")
     }
 
-    fun convertMorseToText(morse: String): String {
+    /**
+     * Transform a Morse code to a String
+     * @param morseCode the morseSequence to decode in text.
+     *        This String should be composed by '-', '.' or ' '
+     * @throws Exception if the string contains other characters than '-', '.' or ' '
+     */
+    fun convertMorseToText(morseCode: String): String {
         var result = ""
 
-        val parsedMorse = morse.split(" ")
-        for (letter in parsedMorse) {
-            result += morseToLetter[letter]
+        var idx = 0
+        var currentChar: Char
+        var currentMorseLetter = ""
+
+        while (idx < morseCode.length) {
+            currentChar = morseCode[idx]
+
+            when (currentChar) {
+                '-', '.' -> {
+                    currentMorseLetter += currentChar
+                    idx++
+                }
+                ' ' -> {
+                    if (!currentMorseLetter.isEmpty() && _morseToLetterArray[currentMorseLetter] != null) {
+                        result += _morseToLetterArray[currentMorseLetter]
+                        idx++
+                        currentMorseLetter = ""
+                    } else {
+                        result += " "
+                        while (idx < morseCode.length && morseCode[idx] == ' ') {
+                            idx++
+                        }
+                    }
+                }
+                else -> {
+                    throw Exception("Unexpected character : $currentChar")
+                }
+            }
+
+        }
+        if (!currentMorseLetter.isEmpty() && _morseToLetterArray[currentMorseLetter] != null) {
+            result += _morseToLetterArray[currentMorseLetter]
         }
 
         return result

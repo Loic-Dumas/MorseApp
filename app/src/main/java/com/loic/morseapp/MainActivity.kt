@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.widget.Toast
 import com.loic.morseapp.morseconverter.MorseConverter
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -41,7 +42,11 @@ class MainActivity : AppCompatActivity() {
         if (stringToMorse) {
             tvTextResult.text = morseConverter.convertTextToMorse(text)
         } else {
-            tvTextResult.text = morseConverter.convertMorseToText(text)
+            try {
+                tvTextResult.text = morseConverter.convertMorseToText(text)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Only - . and spaces are allowed.", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
