@@ -22,7 +22,8 @@ class MainActivity : AppCompatActivity() {
         btConvertMode.setOnClickListener {
             stringToMorse = !stringToMorse
             setButtonText()
-            convertText(etTextToConvert.text.toString())
+            etTextToConvert.setText(tvTextResult.text.toString())
+            etTextToConvert.setSelection(etTextToConvert.length())
         }
 
         etTextToConvert.addTextChangedListener(autoTranslate)
