@@ -88,4 +88,15 @@ class MainActivity : AppCompatActivity(), PlayerListener {
         viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.blackColor))
     }
 
+    override fun playerStarted() {
+        Toast.makeText(this, "starting", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun playerFinished() {
+        Toast.makeText(this, "Over", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun notifyProgress(progress: Float, letterIndex: Int) {
+    }
+
 }

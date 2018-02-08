@@ -6,4 +6,7 @@ package com.loic.morseapp.player
 interface PlayerListener {
     fun switchOn()
     fun switchOff()
+    fun playerStarted()
+    fun playerFinished()
+    fun notifyProgress(progress: Float, letterIndex: Int)
 }

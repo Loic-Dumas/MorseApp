@@ -1,15 +1,16 @@
 package com.loic.morseapp.player
 
+import android.os.CountDownTimer
 import android.util.Log
+import java.util.*
 
 /**
  * Created by loic.dumas on 19/01/2018.
  */
 class PlayerController {
 
-    val TIME : Long = 1000
+    val TIME: Long = 500
     private val _listeners = ArrayList<PlayerListener>()
-    var _currentPlayer = Thread()
 
     fun addListener(listener: PlayerListener) {
         _listeners.add(listener)
@@ -24,63 +25,57 @@ class PlayerController {
     }
 
     fun play(morseCode: String) {
-//        if (morseCode.matches(Regex()))
 
-        _currentPlayer = Thread {
-            for (char in morseCode) {
-                when (char) {
-                    '-' -> {
+        // check if it's a correct morse code
 
-                        Log.d("Player", "begin - ")
+        // transform to boolean signal
+        val morseSignal = ArrayList<Boolean>()
 
-                        switchOnListeners()
-                        Thread.sleep(3 * TIME)
-                        Log.d("Player", "medium - ")
-                        switchOffListeners()
-                        Thread.sleep(TIME)
-                        Log.d("Player", "end - ")
-                    }
-                    '.' -> {
-                        Log.d("Player", "begin . ")
-                        switchOnListeners()
-
-                        Thread.sleep(TIME)
-                        Log.d("Player", "medium . ")
-                        switchOffListeners()
-                        Thread.sleep(TIME)
-                        Log.d("Player", "end . ")
-                    }
-                    ' ' -> {
-                        Log.d("Player", "begin ' ' ")
-                        switchOffListeners()
-                        Thread.sleep(TIME)
-                        Log.d("Player", "end ' ' ")
-                    }
-                    else -> {
-                        Log.d("Player", "begin ? ")
-                        switchOffListeners()
-                        Thread.sleep(TIME)
-                        Log.d("Player", "end ? ")
-                    }
+        for (char in morseCode) {        // simplifié, on gère tous les espaces pareil
+            when (char) {
+                '-' -> {
+                    morseSignal += Arrays.asList(true, true, true, false)
+                }
+                '.' -> {
+                    morseSignal += Arrays.asList(true, false)
+                }
+                ' ' -> {
+                    morseSignal += Arrays.asList(false, false, false)
                 }
             }
-
         }
-        _currentPlayer.start()
+        Log.d("DEBUG", morseSignal.toString())
 
 
+        // play
+        var index = 0
+        val timer = object : CountDownTimer(morseSignal.size * TIME, TIME) {
+            override fun onFinish() {
+                _listeners.forEach { it.playerFinished() }
+            }
 
+            override fun onTick(millisUntilFinished: Long) {
+                if (index < morseSignal.size) {
+                    Log.d("DEBUG", "Display : ${morseSignal[index]}")
+                    if (morseSignal[index]) switchOnListeners()
+                    else switchOffListeners()
+                    index++
+                } else {
+                    Log.e("Error", "The CharSequence is over")
+                    this.cancel()
+                }
+            }
+        }
+        timer.start()
+
+        _listeners.forEach { it.playerStarted() }
     }
 
     private fun switchOnListeners() {
-        for (listener in _listeners) {
-            listener.switchOn()
-        }
+        _listeners.forEach { it.switchOn() }
     }
 
     private fun switchOffListeners() {
-        for (listener in _listeners) {
-            listener.switchOff()
-        }
+        _listeners.forEach { it.switchOff() }
     }
 }
