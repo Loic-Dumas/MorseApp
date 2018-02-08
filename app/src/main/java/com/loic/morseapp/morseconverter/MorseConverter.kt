@@ -145,12 +145,16 @@ class MorseConverter {
         for (letter in text.toLowerCase()) {
             val morseLetter = _letterToMorseArray[letter]
             result += when {
-                morseLetter != null -> morseLetter + " "
-                letter.equals(" ") -> "     "
-                else -> letter + " "
+                morseLetter != null -> morseLetter + " " // the letter is in the morse dictionary
+                letter == ' ' -> " " // a space
+                else -> letter + " " // unknown letter
             }
         }
-        return result.removeSuffix(" ")
+
+        // if the last letter is a character, remove the last ending space
+        if (!text.isEmpty() && text.last() != ' ') result = result.removeSuffix(" ")
+
+        return result
     }
 
     /**
@@ -170,32 +174,47 @@ class MorseConverter {
             currentChar = morseCode[idx]
 
             when (currentChar) {
-                '-', '.' -> {
+                '-', '.' -> { // continue to digest current morse char
                     currentMorseLetter += currentChar
                     idx++
                 }
-                ' ' -> {
-                    if (!currentMorseLetter.isEmpty() && _morseToLetterArray[currentMorseLetter] != null) {
-                        result += _morseToLetterArray[currentMorseLetter]
+                ' ' -> { // end of a morse char or space
+                    if (!currentMorseLetter.isEmpty()) { // a morse character is being analyzed
+                        if (_morseToLetterArray[currentMorseLetter] != null) // The morse character exist
+                            result += _morseToLetterArray[currentMorseLetter]
+                        else
+                            throw UnknownMorseCharacterException(currentMorseLetter)
                         idx++
                         currentMorseLetter = ""
-                    } else {
+                    } else { // a space
                         result += " "
-                        while (idx < morseCode.length && morseCode[idx] == ' ') {
-                            idx++
-                        }
+                        idx++
                     }
                 }
-                else -> {
-                    throw Exception("Unexpected character : $currentChar")
+                else -> { // the string should be composed only by dots dashes or spaces
+                    throw UnexpectedCharacterException("Unexpected character : $currentChar")
                 }
             }
 
         }
-        if (!currentMorseLetter.isEmpty() && _morseToLetterArray[currentMorseLetter] != null) {
-            result += _morseToLetterArray[currentMorseLetter]
+        if (!currentMorseLetter.isEmpty()) { // a morse character is being analyzed
+            if (_morseToLetterArray[currentMorseLetter] != null) // The morse character exist
+                result += _morseToLetterArray[currentMorseLetter]
+            else
+                throw UnknownMorseCharacterException(currentMorseLetter)
         }
 
         return result
     }
+}
+
+class UnknownMorseCharacterException(val morseChar: String) : Exception() {
+    override val message: String
+        get() = "Not recognized morse character : $morseChar"
+}
+
+
+class UnexpectedCharacterException(val char: String) : Exception() {
+    override val message: String
+        get() = "Unexpected character : $char"
 }

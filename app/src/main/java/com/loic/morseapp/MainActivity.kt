@@ -6,6 +6,8 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.Toast
 import com.loic.morseapp.morseconverter.MorseConverter
+import com.loic.morseapp.morseconverter.UnexpectedCharacterException
+import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -45,8 +47,10 @@ class MainActivity : AppCompatActivity() {
         } else {
             try {
                 tvTextResult.text = morseConverter.convertMorseToText(text)
-            } catch (e: Exception) {
-                Toast.makeText(this, "Only - . and spaces are allowed.", Toast.LENGTH_SHORT).show()
+            } catch (e: UnexpectedCharacterException) {
+                Toast.makeText(this, "${e.char} is forbidden, only - . and spaces are allowed.", Toast.LENGTH_SHORT).show()
+            } catch (e: UnknownMorseCharacterException) {
+                Toast.makeText(this, "Impossible to recognize this Character : ${e.morseChar}", Toast.LENGTH_SHORT).show()
             }
         }
     }
