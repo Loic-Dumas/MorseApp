@@ -1,12 +1,15 @@
 package com.loic.morseapp
 
+import android.content.Context
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.loic.morseapp.morseconverter.MorseConverter
+import com.loic.morseapp.morseconverter.vibrator.VibratorManager
 import com.loic.morseapp.player.PlayerController
 import com.loic.morseapp.player.PlayerListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,9 +39,14 @@ class MainActivity : AppCompatActivity(), PlayerListener {
 
 
         _player.addListener(this)
-        btPlay.setOnClickListener {
+        _player.addListener(VibratorManager(this))
 
+        btPlay.setOnClickListener {
             _player.play(tvTextResult.text.toString())
+            if (currentFocus != null) {
+                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+            }
         }
 
     }
@@ -72,20 +80,18 @@ class MainActivity : AppCompatActivity(), PlayerListener {
     private fun setButtonText() {
         if (stringToMorse) {
             btConvertMode.text = getString(R.string.toMorse)
-            switchOn()
         } else {
             btConvertMode.text = getString(R.string.toString)
-            switchOff()
         }
     }
 
 
     override fun switchOn() {
-        viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.whiteColor))
+        viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOnColor))
     }
 
     override fun switchOff() {
-        viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.blackColor))
+        viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
     }
 
     override fun playerStarted() {
@@ -93,6 +99,7 @@ class MainActivity : AppCompatActivity(), PlayerListener {
     }
 
     override fun playerFinished() {
+        viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
         Toast.makeText(this, "Over", Toast.LENGTH_SHORT).show()
     }
 

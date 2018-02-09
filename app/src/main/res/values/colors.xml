@@ -8,4 +8,6 @@
 
     <color name="blackColor">#000</color>
     <color name="whiteColor">#FFF</color>
+    <color name="switchOnColor">#f9cd3c</color>
+    <color name="switchOffColor">#FFF</color>
 </resources>

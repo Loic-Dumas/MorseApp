@@ -9,7 +9,10 @@ import java.util.*
  */
 class PlayerController {
 
-    val TIME: Long = 500
+    companion object {
+        val TIME_LENGH: Long = 200
+    }
+
     private val _listeners = ArrayList<PlayerListener>()
 
     fun addListener(listener: PlayerListener) {
@@ -49,7 +52,7 @@ class PlayerController {
 
         // play
         var index = 0
-        val timer = object : CountDownTimer(morseSignal.size * TIME, TIME) {
+        val timer = object : CountDownTimer(morseSignal.size * TIME_LENGH, TIME_LENGH) {
             override fun onFinish() {
                 _listeners.forEach { it.playerFinished() }
             }
@@ -57,6 +60,7 @@ class PlayerController {
             override fun onTick(millisUntilFinished: Long) {
                 if (index < morseSignal.size) {
                     Log.d("DEBUG", "Display : ${morseSignal[index]}")
+                    // faire un check pour éviter de rappeler le listener si on était déjà dans le bon état
                     if (morseSignal[index]) switchOnListeners()
                     else switchOffListeners()
                     index++
