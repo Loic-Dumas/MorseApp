@@ -5,4 +5,9 @@
     <color name="colorAccent">#40FF81</color>
 
     <color name="backgroundColor">#97b1b1b1</color>
+
+    <color name="blackColor">#000</color>
+    <color name="whiteColor">#FFF</color>
+    <color name="switchOnColor">#f9cd3c</color>
+    <color name="switchOffColor">#FFF</color>
 </resources>
