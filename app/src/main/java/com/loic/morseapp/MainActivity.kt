@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity(), PlayerListener {
             }
         }
 
+        btStop.setOnClickListener { _player.stop() }
+
     }
 
     override fun onDestroy() {

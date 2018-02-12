@@ -15,6 +15,7 @@ class PlayerController {
     }
 
     private val _listeners = ArrayList<PlayerListener>()
+    private var _timer: CountDownTimer? = null
 
     fun addListener(listener: PlayerListener) {
         _listeners.add(listener)
@@ -29,24 +30,26 @@ class PlayerController {
     }
 
     /**
-     * @param a String in morse code, so only composed by . - or spaces
+     * @param morseCode a String in morse code, so only composed by . - or spaces
      * When the play() method is launched, player listeners are called when they need to change the state.
      */
     fun play(morseCode: String) {
         // mechanism : the morseCode string is transformed into an array of boolean
         // Then a CountDownTimer is used to be called back on every tick (every TIME_LENGTH)
 
+        stop()
+
         val morseSignal = transformToMorseSignal(morseCode)
         Log.d("DEBUG", morseSignal.toString())
 
-        _listeners.forEach { it.onPlayerStarted() }
+        notifyPlayerStarted()
 
         var indexSignal = 0
-        var indexChar = 0
+        var indexChar = -1
         var previousState = false
-        object : CountDownTimer((morseSignal.size + 1) * TIME_LENGTH, TIME_LENGTH) {
+        _timer = object : CountDownTimer((morseSignal.size + 1) * TIME_LENGTH, TIME_LENGTH) {
             override fun onFinish() {
-                _listeners.forEach { it.onPlayerFinished() }
+                notifyPlayerFinished()
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -78,6 +81,15 @@ class PlayerController {
                 }
             }
         }.start()
+    }
+
+    /**
+     * Stop the player
+     */
+    fun stop() {
+        _timer?.cancel()
+        switchOffListeners()
+        notifyPlayerFinished()
     }
 
     /**
@@ -122,4 +134,13 @@ class PlayerController {
     private fun notifyTotalProgress(percent: Float) {
         _listeners.forEach { it.onTotalProgressChanged(percent) }
     }
+
+    private fun notifyPlayerFinished() {
+        _listeners.forEach { it.onPlayerFinished() }
+    }
+
+    private fun notifyPlayerStarted() {
+        _listeners.forEach { it.onPlayerStarted() }
+    }
+
 }
