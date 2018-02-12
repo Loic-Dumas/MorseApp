@@ -1,11 +1,14 @@
 package com.loic.morseapp
 
 import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.BackgroundColorSpan
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import com.loic.morseapp.manager.vibrator.VibratorManager
@@ -104,6 +107,7 @@ class MainActivity : AppCompatActivity(), PlayerListener {
 
     override fun onPlayerFinished() {
         viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
+        tvTextResult.text = tvTextResult.text.toString()
         Toast.makeText(this, "Over", Toast.LENGTH_SHORT).show()
     }
 
@@ -112,7 +116,11 @@ class MainActivity : AppCompatActivity(), PlayerListener {
     }
 
     override fun onMorseCharacterChanged(letterIndex: Int) {
-        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if (letterIndex < tvTextResult.text.length) {
+            val span = SpannableString(tvTextResult.text.toString())
+            span.setSpan(BackgroundColorSpan(Color.GREEN), letterIndex, letterIndex + 1, 0)
+            tvTextResult.text = span
+        }
     }
 
 }

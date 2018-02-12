@@ -64,10 +64,12 @@ class PlayerController {
                     notifyTotalProgress((indexSignal / morseSignal.size).toFloat())
 
                     // notify character changed
-                    if (indexChar != currentSignal.charIndex)
-                        notifyCharacterChanged(0)
+                    if (indexChar != currentSignal.charIndex) {
+                        notifyCharacterChanged(currentSignal.charIndex)
+                        indexChar = currentSignal.charIndex
+                    }
 
-                    Log.d("DEBUG", "Display $indexSignal: $currentSignal")
+                    Log.d("DEBUG", "Display signal $indexSignal: $currentSignal")
 
                     indexSignal++
                 } else {
