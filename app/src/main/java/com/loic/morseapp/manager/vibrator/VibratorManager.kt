@@ -1,4 +1,4 @@
-package com.loic.morseapp.morseconverter.vibrator
+package com.loic.morseapp.manager.vibrator
 
 import android.content.Context
 import android.os.Build
@@ -18,9 +18,9 @@ class VibratorManager(context: Context) : PlayerListener {
     @RequiresApi(Build.VERSION_CODES.O)
     override fun switchOn() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(PlayerController.TIME_LENGH, VibrationEffect.DEFAULT_AMPLITUDE))
+            vibrator.vibrate(VibrationEffect.createOneShot(PlayerController.TIME_LENGTH * 3, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
-            vibrator.vibrate(PlayerController.TIME_LENGH)
+            vibrator.vibrate(PlayerController.TIME_LENGTH * 3)
         }
     }
 
@@ -28,15 +28,15 @@ class VibratorManager(context: Context) : PlayerListener {
         vibrator.cancel()
     }
 
-    override fun playerStarted() {
-    }
+    override fun onPlayerStarted() {}
 
-    override fun playerFinished() {
+    override fun onPlayerFinished() {
         vibrator.cancel()
     }
 
-    override fun notifyProgress(progress: Float, letterIndex: Int) {
-    }
+    override fun onTotalProgressChanged(progress: Float) {}
+
+    override fun onMorseCharacterChanged(letterIndex: Int) {}
 
 
     // TODO check if device has vibrator

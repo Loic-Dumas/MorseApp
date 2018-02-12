@@ -8,10 +8,10 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
+import com.loic.morseapp.manager.vibrator.VibratorManager
 import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
-import com.loic.morseapp.morseconverter.vibrator.VibratorManager
 import com.loic.morseapp.player.PlayerController
 import com.loic.morseapp.player.PlayerListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -98,16 +98,21 @@ class MainActivity : AppCompatActivity(), PlayerListener {
         viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
     }
 
-    override fun playerStarted() {
+    override fun onPlayerStarted() {
         Toast.makeText(this, "starting", Toast.LENGTH_SHORT).show()
     }
 
-    override fun playerFinished() {
+    override fun onPlayerFinished() {
         viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
         Toast.makeText(this, "Over", Toast.LENGTH_SHORT).show()
     }
 
-    override fun notifyProgress(progress: Float, letterIndex: Int) {
+    override fun onTotalProgressChanged(progress: Float) {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    override fun onMorseCharacterChanged(letterIndex: Int) {
+        // TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

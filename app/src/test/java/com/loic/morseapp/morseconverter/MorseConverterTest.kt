@@ -54,13 +54,6 @@ class MorseConverterTest {
         assertEquals("ea  e", morseConverter.convertMorseToText(". .-   . ")) // multiple spaces middle
         assertEquals("se  ", morseConverter.convertMorseToText("... .   ")) // multiple spaces end
         assertEquals("   ", morseConverter.convertMorseToText("   ")) // multiple spaces
-
-
-
-        // errors
-        // unkown char
-        // unkown morse letter
-//        assertEquals("sos", morseConverter.convertMorseToText("-..-.... --- ... "))
     }
 
     @Test(expected = UnknownMorseCharacterException::class)
@@ -71,5 +64,17 @@ class MorseConverterTest {
     @Test(expected = UnexpectedCharacterException::class)
     fun convertMorseToTextWithUnexpectedCharacterExceptionTest() {
         MorseConverter().convertMorseToText("~")
+    }
+
+    @Test
+    fun isCorrectMorseCode() {
+        assertEquals(true, MorseConverter.isValidMorseCode(""))
+        assertEquals(true, MorseConverter.isValidMorseCode(" "))
+        assertEquals(true, MorseConverter.isValidMorseCode("."))
+        assertEquals(true, MorseConverter.isValidMorseCode("-"))
+        assertEquals(true, MorseConverter.isValidMorseCode(" .-"))
+        assertEquals(true, MorseConverter.isValidMorseCode("   .... ----"))
+        assertEquals(false, MorseConverter.isValidMorseCode("e"))
+        assertEquals(false, MorseConverter.isValidMorseCode("--22"))
     }
 }

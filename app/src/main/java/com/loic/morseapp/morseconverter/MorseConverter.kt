@@ -206,6 +206,15 @@ class MorseConverter {
 
         return result
     }
+
+    companion object {
+        /**
+         * Check if the morse code contain invalid characters
+         */
+        fun isValidMorseCode(morseCode: String): Boolean {
+            return morseCode.matches("[-. ]*".toRegex())
+        }
+    }
 }
 
 class UnknownMorseCharacterException(val morseChar: String) : Exception() {
