@@ -14,14 +14,14 @@ class PlayerController {
         val TIME_LENGTH: Long = 500
     }
 
-    private val _listeners = ArrayList<PlayerListener>()
+    private val _listeners = ArrayList<MorsePlayerListener>()
     private var _timer: CountDownTimer? = null
 
-    fun addListener(listener: PlayerListener) {
+    fun addListener(listener: MorsePlayerListener) {
         _listeners.add(listener)
     }
 
-    fun removeListener(listener: PlayerListener) {
+    fun removeListener(listener: MorsePlayerListener) {
         _listeners.remove(listener)
     }
 

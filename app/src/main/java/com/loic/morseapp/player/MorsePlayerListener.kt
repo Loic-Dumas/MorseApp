@@ -3,7 +3,7 @@ package com.loic.morseapp.player
 /**
  * Created by loic.dumas on 19/01/2018.
  */
-interface PlayerListener {
+interface MorsePlayerListener {
     fun switchOn()
     fun switchOff()
     fun onPlayerStarted()

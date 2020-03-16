@@ -6,12 +6,12 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
 import com.loic.morseapp.player.PlayerController
-import com.loic.morseapp.player.PlayerListener
+import com.loic.morseapp.player.MorsePlayerListener
 
 /**
  * Class used to manage the vibrator
  */
-class VibratorManager(context: Context) : PlayerListener {
+class VibratorManager(context: Context) : MorsePlayerListener {
 
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 

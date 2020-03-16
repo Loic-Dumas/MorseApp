@@ -16,53 +16,57 @@ import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
 import com.loic.morseapp.player.PlayerController
-import com.loic.morseapp.player.PlayerListener
+import com.loic.morseapp.player.MorsePlayerListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), PlayerListener {
+class MainActivity : AppCompatActivity(), MorsePlayerListener {
 
     private var textToMorse = true
-    private val _player = PlayerController()
+    private val _morsePlayer = PlayerController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        //region Init player by adding player
+        _morsePlayer.addListener(this)
+        _morsePlayer.addListener(VibratorManager(this))
+        //endregion
+
+        //region Set the view (button, ...)
         setButtonText()
         btConvertMode.setOnClickListener {
+            _morsePlayer.stop()
             textToMorse = !textToMorse
             setButtonText()
             etTextToConvert.setText(tvTextResult.text.toString())
             etTextToConvert.setSelection(etTextToConvert.length())
-
-            etTextToConvert.inputType
         }
 
-        etTextToConvert.addTextChangedListener(autoTranslate)
-
-
-        _player.addListener(this)
-        _player.addListener(VibratorManager(this))
+        etTextToConvert.addTextChangedListener(onTextToTranslateChanged)
 
         btPlay.setOnClickListener {
-            _player.play(tvTextResult.text.toString())
+            _morsePlayer.play(tvTextResult.text.toString())
             if (currentFocus != null) {
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
             }
         }
 
-        btStop.setOnClickListener { _player.stop() }
-
+        btStop.setOnClickListener { _morsePlayer.stop() }
+        //endregion
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _player.removeAllListener()
+        _morsePlayer.removeAllListener()
     }
 
-    private val autoTranslate = object : TextWatcher {
+    /**
+     * TextWatcher used to translate the written text in morse every time the text imput is updated.
+     */
+    private val onTextToTranslateChanged = object : TextWatcher {
         override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
             convertText(sequence.toString())
         }
