@@ -22,9 +22,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), PlayerListener {
 
-    private val morseConverter = MorseConverter()
-    private var stringToMorse = true
-    val _player = PlayerController()
+    private var textToMorse = true
+    private val _player = PlayerController()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +31,7 @@ class MainActivity : AppCompatActivity(), PlayerListener {
 
         setButtonText()
         btConvertMode.setOnClickListener {
-            stringToMorse = !stringToMorse
+            textToMorse = !textToMorse
             setButtonText()
             etTextToConvert.setText(tvTextResult.text.toString())
             etTextToConvert.setSelection(etTextToConvert.length())
@@ -73,11 +72,11 @@ class MainActivity : AppCompatActivity(), PlayerListener {
     }
 
     private fun convertText(text: String) {
-        if (stringToMorse) {
-            tvTextResult.text = morseConverter.convertTextToMorse(text)
+        if (textToMorse) {
+            tvTextResult.text = MorseConverter.convertTextToMorse(text)
         } else {
             try {
-                tvTextResult.text = morseConverter.convertMorseToText(text)
+                tvTextResult.text = MorseConverter.convertMorseToText(text)
             } catch (e: UnexpectedCharacterException) {
                 Toast.makeText(this, "${e.char} is forbidden, only - . and spaces are allowed.", Toast.LENGTH_SHORT).show()
             } catch (e: UnknownMorseCharacterException) {
@@ -87,7 +86,7 @@ class MainActivity : AppCompatActivity(), PlayerListener {
     }
 
     private fun setButtonText() {
-        if (stringToMorse) {
+        if (textToMorse) {
             btConvertMode.text = getString(R.string.toMorse)
         } else {
             btConvertMode.text = getString(R.string.toString)
