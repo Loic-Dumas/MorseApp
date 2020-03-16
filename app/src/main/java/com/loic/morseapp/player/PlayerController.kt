@@ -11,7 +11,7 @@ import kotlin.collections.ArrayList
 class PlayerController {
 
     companion object {
-        val TIME_LENGTH: Long = 500
+        const val TIME_LENGTH: Long = 300
     }
 
     private val _listeners = ArrayList<MorsePlayerListener>()
