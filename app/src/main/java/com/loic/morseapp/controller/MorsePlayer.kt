@@ -2,7 +2,6 @@ package com.loic.morseapp.controller
 
 import android.os.CountDownTimer
 import android.util.Log
-import java.util.*
 import kotlin.collections.ArrayList
 
 /**
@@ -64,7 +63,7 @@ class MorsePlayer {
                         previousState = currentSignal.activated
                     }
 
-                    notifyTotalProgress((indexSignal / morseSignal.size).toFloat())
+                    notifyTotalProgress(indexSignal.toFloat() / morseSignal.size)
 
                     // notify character changed
                     if (indexChar != currentSignal.charIndex) {
@@ -103,18 +102,19 @@ class MorsePlayer {
 
     private fun transformToMorseSignal(morseCode: String): ArrayList<Signal> {
         val morseSignal = ArrayList<Signal>()
-        for (idx in 0 until morseCode.length) {
+        for (idx in morseCode.indices) {
             when (morseCode[idx]) {
                 '-' -> {
-                    morseSignal += Arrays.asList(Signal(true, idx), Signal(true, idx), Signal(true, idx), Signal(false, idx))
+                    morseSignal += listOf(Signal(true, idx), Signal(true, idx), Signal(true, idx))
                 }
                 '.' -> {
-                    morseSignal += Arrays.asList(Signal(true, idx), Signal(false, idx))
+                    morseSignal += listOf(Signal(true, idx))
                 }
                 ' ' -> {
-                    morseSignal += Arrays.asList(Signal(false, idx), Signal(false, idx), Signal(false, idx))
+                    morseSignal += listOf(Signal(false, idx), Signal(false, idx))
                 }
             }
+            morseSignal += listOf(Signal(false, idx))
         }
         return morseSignal
     }
@@ -135,12 +135,11 @@ class MorsePlayer {
         _listeners.forEach { it.onTotalProgressChanged(percent) }
     }
 
-    private fun notifyPlayerFinished() {
-        _listeners.forEach { it.onPlayerFinished() }
-    }
-
     private fun notifyPlayerStarted() {
         _listeners.forEach { it.onPlayerStarted() }
     }
 
+    private fun notifyPlayerFinished() {
+        _listeners.forEach { it.onPlayerFinished() }
+    }
 }

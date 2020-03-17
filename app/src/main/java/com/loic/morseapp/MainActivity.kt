@@ -3,6 +3,7 @@ package com.loic.morseapp
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.support.v4.content.ContextCompat
@@ -13,10 +14,7 @@ import android.text.TextWatcher
 import android.text.style.BackgroundColorSpan
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.loic.morseapp.controller.FlashLightController
-import com.loic.morseapp.controller.MorsePlayer
-import com.loic.morseapp.controller.MorsePlayerListenerInterface
-import com.loic.morseapp.controller.VibratorController
+import com.loic.morseapp.controller.*
 import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
@@ -35,12 +33,17 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         //region Init player by adding player
         _morsePlayer.addListener(this)
 
-        if ((getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).hasVibrator()) {
-            _morsePlayer.addListener(VibratorController(this))
-        }
 
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
-            _morsePlayer.addListener(FlashLightController(this))
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                _morsePlayer.addListener(FlashLightController(this))
+            } else {
+                _morsePlayer.addListener(FlashLightOldController())
+            }
+        }
+
+        if ((getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).hasVibrator()) {
+            _morsePlayer.addListener(VibratorController(this))
         }
         //endregion
 
@@ -56,15 +59,19 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
 
         etTextToConvert.addTextChangedListener(onTextToTranslateChanged)
 
+
         btPlay.setOnClickListener {
             _morsePlayer.play(tvTextResult.text.toString())
             if (currentFocus != null) {
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
             }
+
         }
 
-        btStop.setOnClickListener { _morsePlayer.stop() }
+        btStop.setOnClickListener {
+            _morsePlayer.stop()
+        }
         //endregion
     }
 
@@ -124,6 +131,8 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
         tvTextResult.text = tvTextResult.text.toString()
         Toast.makeText(this, "Over", Toast.LENGTH_SHORT).show()
+
+        tvTextResult.text = SpannableString(tvTextResult.text.toString())
     }
 
     override fun onTotalProgressChanged(progress: Float) {
