@@ -1,4 +1,4 @@
-package com.loic.morseapp.player
+package com.loic.morseapp.controller
 
 import android.os.CountDownTimer
 import android.util.Log
@@ -8,20 +8,20 @@ import kotlin.collections.ArrayList
 /**
  * Created by loic.dumas on 19/01/2018.
  */
-class PlayerController {
+class MorsePlayer {
 
     companion object {
         const val TIME_LENGTH: Long = 300
     }
 
-    private val _listeners = ArrayList<MorsePlayerListener>()
+    private val _listeners = ArrayList<MorsePlayerListenerInterface>()
     private var _timer: CountDownTimer? = null
 
-    fun addListener(listener: MorsePlayerListener) {
+    fun addListener(listener: MorsePlayerListenerInterface) {
         _listeners.add(listener)
     }
 
-    fun removeListener(listener: MorsePlayerListener) {
+    fun removeListener(listener: MorsePlayerListenerInterface) {
         _listeners.remove(listener)
     }
 

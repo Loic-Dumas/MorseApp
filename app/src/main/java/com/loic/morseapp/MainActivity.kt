@@ -1,8 +1,10 @@
 package com.loic.morseapp
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Vibrator
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -11,19 +13,20 @@ import android.text.TextWatcher
 import android.text.style.BackgroundColorSpan
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.loic.morseapp.manager.vibrator.VibratorManager
+import com.loic.morseapp.controller.FlashLightController
+import com.loic.morseapp.controller.MorsePlayer
+import com.loic.morseapp.controller.MorsePlayerListenerInterface
+import com.loic.morseapp.controller.VibratorController
 import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
-import com.loic.morseapp.player.PlayerController
-import com.loic.morseapp.player.MorsePlayerListener
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), MorsePlayerListener {
+class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
 
     private var textToMorse = true
-    private val _morsePlayer = PlayerController()
+    private val _morsePlayer = MorsePlayer()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +34,14 @@ class MainActivity : AppCompatActivity(), MorsePlayerListener {
 
         //region Init player by adding player
         _morsePlayer.addListener(this)
-        _morsePlayer.addListener(VibratorManager(this))
+
+        if ((getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).hasVibrator()) {
+            _morsePlayer.addListener(VibratorController(this))
+        }
+
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
+            _morsePlayer.addListener(FlashLightController(this))
+        }
         //endregion
 
         //region Set the view (button, ...)

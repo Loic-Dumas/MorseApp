@@ -1,26 +1,24 @@
-package com.loic.morseapp.manager.vibrator
+package com.loic.morseapp.controller
 
 import android.content.Context
 import android.os.Build
 import android.os.VibrationEffect
 import android.os.Vibrator
 import android.support.annotation.RequiresApi
-import com.loic.morseapp.player.PlayerController
-import com.loic.morseapp.player.MorsePlayerListener
 
 /**
  * Class used to manage the vibrator
  */
-class VibratorManager(context: Context) : MorsePlayerListener {
+class VibratorController(context: Context) : MorsePlayerListenerInterface {
 
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun switchOn() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            vibrator.vibrate(VibrationEffect.createOneShot(PlayerController.TIME_LENGTH * 3, VibrationEffect.DEFAULT_AMPLITUDE))
+            vibrator.vibrate(VibrationEffect.createOneShot(MorsePlayer.TIME_LENGTH * 3, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
-            vibrator.vibrate(PlayerController.TIME_LENGTH * 3)
+            vibrator.vibrate(MorsePlayer.TIME_LENGTH * 3)
         }
     }
 
@@ -31,7 +29,7 @@ class VibratorManager(context: Context) : MorsePlayerListener {
     override fun onPlayerStarted() {}
 
     override fun onPlayerFinished() {
-        vibrator.cancel()
+        switchOff()
     }
 
     override fun onTotalProgressChanged(progress: Float) {}
