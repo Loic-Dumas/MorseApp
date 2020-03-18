@@ -1,11 +1,13 @@
 package com.loic.morseapp
 
+import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
+import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.text.Editable
@@ -23,8 +25,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
 
+    companion object {
+        private const val CAMERA_PERMISSION_REQUEST_CODE = 50
+    }
+
     private var textToMorse = true
     private val _morsePlayer = MorsePlayer()
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -38,7 +45,13 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 _morsePlayer.addListener(FlashLightController(this))
             } else {
-                _morsePlayer.addListener(FlashLightOldController())
+                if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
+                    // Permission has already been granted
+                    _morsePlayer.addListener(FlashLightOldController())
+                } else {
+                    // Permission not granted, need to ask it
+                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+                }
             }
         }
 
@@ -77,6 +90,19 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
     override fun onDestroy() {
         super.onDestroy()
         _morsePlayer.removeAllListener()
+    }
+
+    /**
+     * To Handle permission request, in this case to use camera.
+     */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        when (requestCode) {
+            CAMERA_PERMISSION_REQUEST_CODE -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    _morsePlayer.addListener(FlashLightOldController())
+                }
+            }
+        }
     }
 
     /**
@@ -145,5 +171,4 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
             tvTextResult.text = span
         }
     }
-
 }
