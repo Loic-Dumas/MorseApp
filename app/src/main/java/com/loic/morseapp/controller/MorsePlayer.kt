@@ -2,7 +2,6 @@ package com.loic.morseapp.controller
 
 import android.os.CountDownTimer
 import android.util.Log
-import kotlin.collections.ArrayList
 
 /**
  * Created by loic.dumas on 19/01/2018.
@@ -46,7 +45,7 @@ class MorsePlayer {
         var indexSignal = 0
         var indexChar = -1
         var previousState = false
-        _timer = object : CountDownTimer((morseSignal.size + 1) * TIME_LENGTH, TIME_LENGTH) {
+        _timer = object : CountDownTimer((morseSignal.size) * TIME_LENGTH, TIME_LENGTH) {
             override fun onFinish() {
                 notifyPlayerFinished()
             }

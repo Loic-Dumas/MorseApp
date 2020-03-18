@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
 
         etTextToConvert.addTextChangedListener(onTextToTranslateChanged)
 
-
         btPlay.setOnClickListener {
             _morsePlayer.play(tvTextResult.text.toString())
             if (currentFocus != null) {
