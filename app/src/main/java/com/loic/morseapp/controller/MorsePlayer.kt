@@ -20,6 +20,7 @@ class MorsePlayer {
     }
 
     fun removeListener(listener: MorsePlayerListenerInterface) {
+        listener.switchOff()
         _listeners.remove(listener)
     }
 

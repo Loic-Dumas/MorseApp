@@ -3,4 +3,7 @@
     <string name="toString">to text</string>
     <string name="toMorse">to morse</string>
     <string name="enter_a_text">Enter a text</string>
+    <string name="flash_light">Flash Light</string>
+    <string name="sound">Sound</string>
+    <string name="vibrator">Vibrator</string>
 </resources>

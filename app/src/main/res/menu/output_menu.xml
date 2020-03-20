@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_flash_light"
+        android:title="@string/flash_light"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_flashlight_on"
+        />
+    <item
+        android:id="@+id/action_sound"
+        android:title="@string/sound"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_sound_on"
+        />
+    <item
+        android:id="@+id/action_vibrator"
+        android:title="@string/vibrator"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_vibration_on"
+        />
+</menu>

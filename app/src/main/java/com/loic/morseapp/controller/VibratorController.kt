@@ -18,6 +18,7 @@ class VibratorController(context: Context) : MorsePlayerListenerInterface {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             vibrator.vibrate(VibrationEffect.createOneShot(MorsePlayer.TIME_LENGTH * 3, VibrationEffect.DEFAULT_AMPLITUDE))
         } else {
+            @Suppress("DEPRECATION")
             vibrator.vibrate(MorsePlayer.TIME_LENGTH * 3)
         }
     }
