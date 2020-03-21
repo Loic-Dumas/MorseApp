@@ -13,7 +13,7 @@ import android.util.Log
  * Allow to switch on and off the device FlashLight
  */
 @RequiresApi(Build.VERSION_CODES.M)
-class FlashLightController(context: Context) : MorsePlayerListenerInterface {
+class FlashLightController(context: Context) : FlashLightControllerInterface {
 
     companion object {
         const val TAG = "FlashLightController"

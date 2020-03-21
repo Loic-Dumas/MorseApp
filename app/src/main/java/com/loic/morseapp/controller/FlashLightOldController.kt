@@ -14,7 +14,7 @@ import kotlin.concurrent.thread
  * Thread are needed as Camera is very slow.
  * Allow to switch on and off the device FlashLight.
  */
-class FlashLightOldController : MorsePlayerListenerInterface {
+class FlashLightOldController : FlashLightControllerInterface {
 
     companion object {
         const val TAG = "FlashLightOldController"
@@ -25,6 +25,16 @@ class FlashLightOldController : MorsePlayerListenerInterface {
 
     override fun switchOn() {
         thread(start = true) {
+            try {
+                if (camera == null) {
+                    camera = open()
+                    parameters = camera?.parameters
+                }
+            } catch (e: Exception) {
+                Log.d(TAG, "Exception received when trying to open the camera in switchOn()." +
+                        "Camera was null : $e")
+            }
+
             try {
                 parameters?.flashMode = Parameters.FLASH_MODE_TORCH
                 camera?.parameters = parameters
