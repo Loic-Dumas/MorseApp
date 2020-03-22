@@ -1,13 +1,15 @@
 package com.loic.morseapp.morseconverter
 
+import java.util.*
+
 /**
- * Convert some text to Morse code, or decode Morse
+ * Convert alpha text to Morse code, or decode Morse
  * Created by Loïc DUMAS on 29/12/17.
  */
 class MorseConverter {
 
     companion object {
-        private val letterToMorseArray = hashMapOf(
+        private val alphaToMorseArray = hashMapOf(
                 //letters
                 'a' to ".-",
                 'b' to "-...",
@@ -71,17 +73,17 @@ class MorseConverter {
                 'ü' to "..--"
         )
 
-        private val morseToLetterArray = letterToMorseArray.entries.associate { (k, v) -> v to k }
+        private val morseToAphaArray = alphaToMorseArray.entries.associate { (k, v) -> v to k }
 
         /**
-         * @return The text given in parameter into a string of morse code.
-         * If a letter isn't known, the letter isn't translated
+         * @return The alpha text in parameter into a string of morse code.
+         * If a letter isn't known, the letter isn't translated.
          */
-        fun convertTextToMorse(text: String): String {
+        fun convertAlphaToMorse(alphaText: String): String {
             var result = ""
 
-            for (letter in text.toLowerCase()) {
-                val morseLetter = letterToMorseArray[letter]
+            for (letter in alphaText.toLowerCase(Locale.getDefault())) {
+                val morseLetter = alphaToMorseArray[letter]
                 result += when {
                     morseLetter != null -> "$morseLetter " // the letter is in the morse dictionary
                     letter == ' ' -> " " // a space
@@ -90,19 +92,19 @@ class MorseConverter {
             }
 
             // if the last letter is a character, remove the last ending space
-            if (!text.isEmpty() && text.last() != ' ') result = result.removeSuffix(" ")
+            if (alphaText.isNotEmpty() && alphaText.last() != ' ') result = result.removeSuffix(" ")
 
             return result
         }
 
         /**
-         * Transform a Morse code to a String
-         * @param morseString the morseSequence to decode in text.
+         * Transform a Morse code to a alpha text.
+         * @param morseString the morseSequence to decode in alpha text.
          *        This String should be composed by '-', '.' or ' '
          * @throws UnexpectedCharacterException if the string contains other characters than '-', '.' or ' '
          * @throws UnknownMorseCharacterException if a sequence of dot/dash cannot be translated.
          */
-        fun convertMorseToText(morseString: String): String {
+        fun convertMorseToAlpha(morseString: String): String {
             var result = ""
 
             var morseStringIndex = 0
@@ -119,8 +121,8 @@ class MorseConverter {
                     }
                     ' ' -> { // end of a morse char or space
                         if (currentMorseLetter.isNotEmpty()) { // a morse character is being analyzed
-                            if (morseToLetterArray[currentMorseLetter] != null) // The morse character exist
-                                result += morseToLetterArray[currentMorseLetter]
+                            if (morseToAphaArray[currentMorseLetter] != null) // The morse character exist
+                                result += morseToAphaArray[currentMorseLetter]
                             else
                                 throw UnknownMorseCharacterException(currentMorseLetter)
                             morseStringIndex++
@@ -137,8 +139,8 @@ class MorseConverter {
 
             }
             if (currentMorseLetter.isNotEmpty()) { // a morse character is being analyzed
-                if (morseToLetterArray[currentMorseLetter] != null) // The morse character exist
-                    result += morseToLetterArray[currentMorseLetter]
+                if (morseToAphaArray[currentMorseLetter] != null) // The morse character exist
+                    result += morseToAphaArray[currentMorseLetter]
                 else
                     throw UnknownMorseCharacterException(currentMorseLetter)
             }

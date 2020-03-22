@@ -9,59 +9,59 @@ import org.junit.Test
 class MorseConverterTest {
 
     @Test
-    fun convertTextToMorseTest() {
+    fun convertAlphaToMorseTest() {
         //single Character
-        assertEquals("---", MorseConverter.convertTextToMorse("o")) // lower case
-        assertEquals(".", MorseConverter.convertTextToMorse("E")) // upper case
-        assertEquals(".-", MorseConverter.convertTextToMorse("a"))
-        assertEquals(".-.-.-", MorseConverter.convertTextToMorse(".")) // special char
-        assertEquals("-.-..", MorseConverter.convertTextToMorse("ç")) // special letter
-        assertEquals("--...", MorseConverter.convertTextToMorse("7")) // number
-        assertEquals("ï", MorseConverter.convertTextToMorse("ï")) // unknown char
-        assertEquals("~", MorseConverter.convertTextToMorse("~")) // unknown char
-        assertEquals("", MorseConverter.convertTextToMorse("")) // empty text
-        assertEquals(" ", MorseConverter.convertTextToMorse(" ")) // space
+        assertEquals("---", MorseConverter.convertAlphaToMorse("o")) // lower case
+        assertEquals(".", MorseConverter.convertAlphaToMorse("E")) // upper case
+        assertEquals(".-", MorseConverter.convertAlphaToMorse("a"))
+        assertEquals(".-.-.-", MorseConverter.convertAlphaToMorse(".")) // special char
+        assertEquals("-.-..", MorseConverter.convertAlphaToMorse("ç")) // special letter
+        assertEquals("--...", MorseConverter.convertAlphaToMorse("7")) // number
+        assertEquals("ï", MorseConverter.convertAlphaToMorse("ï")) // unknown char
+        assertEquals("~", MorseConverter.convertAlphaToMorse("~")) // unknown char
+        assertEquals("", MorseConverter.convertAlphaToMorse("")) // empty text
+        assertEquals(" ", MorseConverter.convertAlphaToMorse(" ")) // space
 
         // Strings
-        assertEquals("... --- ...", MorseConverter.convertTextToMorse("sos")) // string
-        assertEquals(".... . .-.. .-.. ---  ..-. .-. .- -. -.-  -.-.--", MorseConverter.convertTextToMorse("Hello Frank !")) // string with space
-        assertEquals(".... . .-.. .-.. ---  ", MorseConverter.convertTextToMorse("Hello ")) // string ending with space
-        assertEquals(" .... . .-.. .-.. ---", MorseConverter.convertTextToMorse(" Hello")) // string starting with space
-        assertEquals(".... . .-.. .-.. ---    ..-. .-. .- -. -.-  -.-.--", MorseConverter.convertTextToMorse("Hello   Frank !"))
-        assertEquals(".-.. --- ï -.-.", MorseConverter.convertTextToMorse("Loïc"))
+        assertEquals("... --- ...", MorseConverter.convertAlphaToMorse("sos")) // string
+        assertEquals(".... . .-.. .-.. ---  ..-. .-. .- -. -.-  -.-.--", MorseConverter.convertAlphaToMorse("Hello Frank !")) // string with space
+        assertEquals(".... . .-.. .-.. ---  ", MorseConverter.convertAlphaToMorse("Hello ")) // string ending with space
+        assertEquals(" .... . .-.. .-.. ---", MorseConverter.convertAlphaToMorse(" Hello")) // string starting with space
+        assertEquals(".... . .-.. .-.. ---    ..-. .-. .- -. -.-  -.-.--", MorseConverter.convertAlphaToMorse("Hello   Frank !"))
+        assertEquals(".-.. --- ï -.-.", MorseConverter.convertAlphaToMorse("Loïc"))
     }
 
     @Test
-    fun convertMorseToTextTest() {
+    fun convertMorseToAlphaTest() {
         // simple character
-        assertEquals("", MorseConverter.convertMorseToText("")) // empty
-        assertEquals(" ", MorseConverter.convertMorseToText(" ")) // space
-        assertEquals("e", MorseConverter.convertMorseToText(".")) // letter
-        assertEquals("e", MorseConverter.convertMorseToText(". ")) // letter + space
-        assertEquals("!", MorseConverter.convertMorseToText("-.-.--"))// known special character
-        assertEquals("9", MorseConverter.convertMorseToText("----.")) // number
-        assertEquals("è", MorseConverter.convertMorseToText(".-..-")) // known special letter
+        assertEquals("", MorseConverter.convertMorseToAlpha("")) // empty
+        assertEquals(" ", MorseConverter.convertMorseToAlpha(" ")) // space
+        assertEquals("e", MorseConverter.convertMorseToAlpha(".")) // letter
+        assertEquals("e", MorseConverter.convertMorseToAlpha(". ")) // letter + space
+        assertEquals("!", MorseConverter.convertMorseToAlpha("-.-.--"))// known special character
+        assertEquals("9", MorseConverter.convertMorseToAlpha("----.")) // number
+        assertEquals("è", MorseConverter.convertMorseToAlpha(".-..-")) // known special letter
 
         // Strings
-        assertEquals("sos", MorseConverter.convertMorseToText("... --- ...")) // no final space
-        assertEquals("sos", MorseConverter.convertMorseToText("... --- ... ")) // with final space
-        assertEquals(" sos", MorseConverter.convertMorseToText(" ... --- ... ")) // simple space begin
-        assertEquals("s os", MorseConverter.convertMorseToText("...  --- ... ")) // simple space middle
-        assertEquals("sos ", MorseConverter.convertMorseToText("... --- ...  ")) // simple space end
-        assertEquals("  ea", MorseConverter.convertMorseToText("  . .-")) // multiple spaces begin
-        assertEquals("ea  e", MorseConverter.convertMorseToText(". .-   . ")) // multiple spaces middle
-        assertEquals("se  ", MorseConverter.convertMorseToText("... .   ")) // multiple spaces end
-        assertEquals("   ", MorseConverter.convertMorseToText("   ")) // multiple spaces
+        assertEquals("sos", MorseConverter.convertMorseToAlpha("... --- ...")) // no final space
+        assertEquals("sos", MorseConverter.convertMorseToAlpha("... --- ... ")) // with final space
+        assertEquals(" sos", MorseConverter.convertMorseToAlpha(" ... --- ... ")) // simple space begin
+        assertEquals("s os", MorseConverter.convertMorseToAlpha("...  --- ... ")) // simple space middle
+        assertEquals("sos ", MorseConverter.convertMorseToAlpha("... --- ...  ")) // simple space end
+        assertEquals("  ea", MorseConverter.convertMorseToAlpha("  . .-")) // multiple spaces begin
+        assertEquals("ea  e", MorseConverter.convertMorseToAlpha(". .-   . ")) // multiple spaces middle
+        assertEquals("se  ", MorseConverter.convertMorseToAlpha("... .   ")) // multiple spaces end
+        assertEquals("   ", MorseConverter.convertMorseToAlpha("   ")) // multiple spaces
     }
 
     @Test(expected = UnknownMorseCharacterException::class)
-    fun convertMorseToTextWithUnknownMorseCharExceptionTest() {
-        MorseConverter.convertMorseToText("-.-..--")
+    fun convertMorseToAlphaWithUnknownMorseCharExceptionTest() {
+        MorseConverter.convertMorseToAlpha("-.-..--")
     }
 
     @Test(expected = UnexpectedCharacterException::class)
-    fun convertMorseToTextWithUnexpectedCharacterExceptionTest() {
-        MorseConverter.convertMorseToText("~")
+    fun convertMorseToAlphaWithUnexpectedCharacterExceptionTest() {
+        MorseConverter.convertMorseToAlpha("~")
     }
 
     @Test

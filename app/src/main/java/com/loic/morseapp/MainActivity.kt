@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
     }
 
     private val _morsePlayer = MorsePlayer()
-    private var _textToMorse = true
+    private var _alphaTextToMorse = true
     private val _flashListener: FlashLightControllerInterface by lazy { getCameraController() }
     private val _soundListener: SoundController by lazy { SoundController() }
     private val _vibratorListener: VibratorController by lazy { VibratorController(this) }
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
 
         btConvertMode.setOnClickListener {
             _morsePlayer.stop()
-            _textToMorse = !_textToMorse
+            _alphaTextToMorse = !_alphaTextToMorse
             etTextToConvert.setText(tvTextResult.text.toString()) //swap text
             etTextToConvert.setSelection(etTextToConvert.length()) //move cursor at the end of text
             setButtonText()
@@ -129,7 +129,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
     }
 
     private fun setButtonText() {
-        if (_textToMorse) {
+        if (_alphaTextToMorse) {
             btConvertMode.text = getString(R.string.toMorse)
         } else {
             btConvertMode.text = getString(R.string.toString)
@@ -137,7 +137,8 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
     }
 
     /**
-     * TextWatcher used to translate the written text in morse every time the text imput is updated.
+     * TextWatcher used to translate the written text into morse or alpha every time the text imput
+     * is updated.
      */
     private val onTextToTranslateChanged = object : TextWatcher {
         override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
@@ -149,11 +150,11 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
     }
 
     private fun convertText(text: String) {
-        if (_textToMorse) {
-            tvTextResult.text = MorseConverter.convertTextToMorse(text)
+        if (_alphaTextToMorse) {
+            tvTextResult.text = MorseConverter.convertAlphaToMorse(text)
         } else {
             try {
-                tvTextResult.text = MorseConverter.convertMorseToText(text)
+                tvTextResult.text = MorseConverter.convertMorseToAlpha(text)
             } catch (e: UnexpectedCharacterException) {
                 Toast.makeText(this, "${e.char} is forbidden, only - . and spaces are allowed.", Toast.LENGTH_SHORT).show()
             } catch (e: UnknownMorseCharacterException) {
