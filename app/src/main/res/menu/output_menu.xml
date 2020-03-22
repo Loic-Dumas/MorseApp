@@ -15,9 +15,9 @@
         android:icon="@drawable/ic_sound_on"
         />
     <item
-        android:id="@+id/action_vibration"
+        android:id="@+id/action_vibrator"
         android:title="@string/vibrator"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_vibration_on"
+        android:icon="@drawable/ic_vibrator_on"
         />
 </menu>

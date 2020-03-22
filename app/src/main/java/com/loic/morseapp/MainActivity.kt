@@ -34,33 +34,35 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         private const val SHARED_PREF = "shared_preferences_morse_app"
         private const val SHARED_PREF_FLASHLIGHT = "pref_flashlight"
         private const val SHARED_PREF_SOUND = "pref_sound"
-        private const val SHARED_PREF_VIBRATION = "pref_vibration"
+        private const val SHARED_PREF_VIBRATOR = "pref_vibrator"
     }
 
     private val _morsePlayer = MorsePlayer()
     private var _textToMorse = true
     private val _flashListener: FlashLightControllerInterface by lazy { getCameraController() }
     private val _soundListener: SoundController by lazy { SoundController() }
-    private val _vibrationListener: VibratorController by lazy { VibratorController(this) }
+    private val _vibratorListener: VibratorController by lazy { VibratorController(this) }
 
     private var _menu: Menu? = null
     private lateinit var _flashStatus: Status
     private lateinit var _soundStatus: Status
-    private lateinit var _vibrationStatus: Status
+    private lateinit var _vibratorStatus: Status
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        // init status of each possible output, based of previous saved status in shared preferences
         val sharedPreferences = baseContext.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
         _flashStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_FLASHLIGHT, Status.ON.toString()))
         _soundStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_SOUND, Status.ON.toString()))
-        _vibrationStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_VIBRATION, Status.ON.toString()))
+        _vibratorStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_VIBRATOR, Status.ON.toString()))
 
         //region Init player by adding player
         _morsePlayer.addListener(this)
 
+        // Add flash light controller
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
             if (_flashStatus == Status.ON) {
                 addFlashControllerOrRequestPermission(false)
@@ -70,25 +72,28 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         }
 
         // todo Add sound listener
+        // Add sound controller
         _soundStatus = Status.UNAVAILABLE
 
+        // Add vibrator controller
         if ((getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).hasVibrator()) {
-            if (_vibrationStatus == Status.ON) {
-                _morsePlayer.addListener(_vibrationListener)
+            if (_vibratorStatus == Status.ON) {
+                _morsePlayer.addListener(_vibratorListener)
             }
         } else {
-            _vibrationStatus = Status.UNAVAILABLE
+            _vibratorStatus = Status.UNAVAILABLE
         }
         //endregion
 
         //region Set the view (button, ...)
         setButtonText()
+
         btConvertMode.setOnClickListener {
             _morsePlayer.stop()
             _textToMorse = !_textToMorse
+            etTextToConvert.setText(tvTextResult.text.toString()) //swap text
+            etTextToConvert.setSelection(etTextToConvert.length()) //move cursor at the end of text
             setButtonText()
-            etTextToConvert.setText(tvTextResult.text.toString())
-            etTextToConvert.setSelection(etTextToConvert.length())
         }
 
         etTextToConvert.addTextChangedListener(onTextToTranslateChanged)
@@ -114,7 +119,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         sharedPreferences.edit()
                 .putString(SHARED_PREF_FLASHLIGHT, _flashStatus.toString())
                 .putString(SHARED_PREF_SOUND, _soundStatus.toString())
-                .putString(SHARED_PREF_VIBRATION, _vibrationStatus.toString())
+                .putString(SHARED_PREF_VIBRATOR, _vibratorStatus.toString())
                 .apply()
     }
 
@@ -123,6 +128,41 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         _morsePlayer.removeAllListener()
     }
 
+    private fun setButtonText() {
+        if (_textToMorse) {
+            btConvertMode.text = getString(R.string.toMorse)
+        } else {
+            btConvertMode.text = getString(R.string.toString)
+        }
+    }
+
+    /**
+     * TextWatcher used to translate the written text in morse every time the text imput is updated.
+     */
+    private val onTextToTranslateChanged = object : TextWatcher {
+        override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            convertText(sequence.toString())
+        }
+
+        override fun afterTextChanged(p0: Editable?) {}
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+    }
+
+    private fun convertText(text: String) {
+        if (_textToMorse) {
+            tvTextResult.text = MorseConverter.convertTextToMorse(text)
+        } else {
+            try {
+                tvTextResult.text = MorseConverter.convertMorseToText(text)
+            } catch (e: UnexpectedCharacterException) {
+                Toast.makeText(this, "${e.char} is forbidden, only - . and spaces are allowed.", Toast.LENGTH_SHORT).show()
+            } catch (e: UnknownMorseCharacterException) {
+                Toast.makeText(this, "Impossible to recognize this Character : ${e.morseChar}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    //region Toolbar menu
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.output_menu, menu)
         _menu = menu;
@@ -167,18 +207,18 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
                 }
                 updateSoundMenuIcon()
             }
-            R.id.action_vibration -> {
-                when (_vibrationStatus) {
+            R.id.action_vibrator -> {
+                when (_vibratorStatus) {
                     Status.ON -> {
-                        _morsePlayer.removeListener(_vibrationListener)
-                        _vibrationStatus = Status.OFF
+                        _morsePlayer.removeListener(_vibratorListener)
+                        _vibratorStatus = Status.OFF
                     }
                     Status.OFF -> {
-                        _morsePlayer.addListener(_vibrationListener)
-                        _vibrationStatus = Status.ON
+                        _morsePlayer.addListener(_vibratorListener)
+                        _vibratorStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
-                        Toast.makeText(this, "Vibration not available", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Vibrator not available", Toast.LENGTH_SHORT).show()
                     }
                 }
                 updateVibratorMenuIcon()
@@ -204,10 +244,10 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
     }
 
     private fun updateVibratorMenuIcon() {
-        when (_vibrationStatus) {
-            Status.ON -> _menu?.findItem(R.id.action_vibration)?.setIcon(R.drawable.ic_vibration_on)
-            Status.OFF -> _menu?.findItem(R.id.action_vibration)?.setIcon(R.drawable.ic_vibration_off)
-            Status.UNAVAILABLE -> _menu?.findItem(R.id.action_vibration)?.icon = getTransparentIcon(R.drawable.ic_vibration_off)
+        when (_vibratorStatus) {
+            Status.ON -> _menu?.findItem(R.id.action_vibrator)?.setIcon(R.drawable.ic_vibrator_on)
+            Status.OFF -> _menu?.findItem(R.id.action_vibrator)?.setIcon(R.drawable.ic_vibrator_off)
+            Status.UNAVAILABLE -> _menu?.findItem(R.id.action_vibrator)?.icon = getTransparentIcon(R.drawable.ic_vibrator_off)
         }
     }
 
@@ -216,6 +256,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         drawable?.alpha = 50
         return drawable
     }
+    //endregion
 
     /**
      * Add [FlashLightControllerInterface] to the [_morsePlayer].
@@ -237,7 +278,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
                     // need to request permission, and check if user already refused.
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
                         if (forceRequest) {
-                            Snackbar.make(coordinatorLayout, R.string.camera_required, Snackbar.LENGTH_LONG)
+                            Snackbar.make(mainActivityCoordinatorLayout, R.string.camera_required, Snackbar.LENGTH_LONG)
                                     .setAction("Allow") {
                                         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
                                     }
@@ -278,41 +319,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         }
     }
 
-    /**
-     * TextWatcher used to translate the written text in morse every time the text imput is updated.
-     */
-    private val onTextToTranslateChanged = object : TextWatcher {
-        override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            convertText(sequence.toString())
-        }
-
-        override fun afterTextChanged(p0: Editable?) {}
-        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-    }
-
-    private fun convertText(text: String) {
-        if (_textToMorse) {
-            tvTextResult.text = MorseConverter.convertTextToMorse(text)
-        } else {
-            try {
-                tvTextResult.text = MorseConverter.convertMorseToText(text)
-            } catch (e: UnexpectedCharacterException) {
-                Toast.makeText(this, "${e.char} is forbidden, only - . and spaces are allowed.", Toast.LENGTH_SHORT).show()
-            } catch (e: UnknownMorseCharacterException) {
-                Toast.makeText(this, "Impossible to recognize this Character : ${e.morseChar}", Toast.LENGTH_SHORT).show()
-            }
-        }
-    }
-
-    private fun setButtonText() {
-        if (_textToMorse) {
-            btConvertMode.text = getString(R.string.toMorse)
-        } else {
-            btConvertMode.text = getString(R.string.toString)
-        }
-    }
-
-
+    //region MorsePlayerListenerInterface implementation
     override fun switchOn() {
         viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOnColor))
     }
@@ -343,6 +350,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
             tvTextResult.text = span
         }
     }
+    //endregion
 
     /**
      * Enumeration for the status of each output signal.
