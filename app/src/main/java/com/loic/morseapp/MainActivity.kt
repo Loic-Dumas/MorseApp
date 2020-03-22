@@ -20,33 +20,33 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.loic.morseapp.controller.*
+import com.loic.morseapp.morseplayer.*
 import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
+class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
 
     companion object {
         private const val CAMERA_PERMISSION_REQUEST_CODE = 565
         private const val SHARED_PREF = "shared_preferences_morse_app"
         private const val SHARED_PREF_FLASHLIGHT = "pref_flashlight"
         private const val SHARED_PREF_SOUND = "pref_sound"
-        private const val SHARED_PREF_VIBRATOR = "pref_vibrator"
+        private const val SHARED_PREF_VIBRATION = "pref_vibration"
     }
 
     private val _morsePlayer = MorsePlayer()
     private var _alphaTextToMorse = true
-    private val _flashListener: FlashLightControllerInterface by lazy { getCameraController() }
-    private val _soundListener: SoundController by lazy { SoundController() }
-    private val _vibratorListener: VibratorController by lazy { VibratorController(this) }
+    private val _morseFlashPlayer: MorseFlashLightPlayerInterface by lazy { getCameraController() }
+    private val _morseSoundPlayer: MorseSoundPlayer by lazy { MorseSoundPlayer() }
+    private val _morseVibrationPlayer: MorseVibrationPlayer by lazy { MorseVibrationPlayer(this) }
 
     private var _menu: Menu? = null
     private lateinit var _flashStatus: Status
     private lateinit var _soundStatus: Status
-    private lateinit var _vibratorStatus: Status
+    private lateinit var _vibrationStatus: Status
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,12 +57,12 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         val sharedPreferences = baseContext.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
         _flashStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_FLASHLIGHT, Status.ON.toString()))
         _soundStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_SOUND, Status.ON.toString()))
-        _vibratorStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_VIBRATOR, Status.ON.toString()))
+        _vibrationStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_VIBRATION, Status.ON.toString()))
 
         //region Init player by adding player
-        _morsePlayer.addListener(this)
+        _morsePlayer.addMorseOutput(this)
 
-        // Add flash light controller
+        // Add flash light morse player
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
             if (_flashStatus == Status.ON) {
                 addFlashControllerOrRequestPermission(false)
@@ -71,17 +71,17 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
             _flashStatus = Status.UNAVAILABLE
         }
 
-        // todo Add sound listener
-        // Add sound controller
+        // todo Add sound morsePlayer
+        // Add sound morse player
         _soundStatus = Status.UNAVAILABLE
 
-        // Add vibrator controller
+        // Add vibration morse player
         if ((getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).hasVibrator()) {
-            if (_vibratorStatus == Status.ON) {
-                _morsePlayer.addListener(_vibratorListener)
+            if (_vibrationStatus == Status.ON) {
+                _morsePlayer.addMorseOutput(_morseVibrationPlayer)
             }
         } else {
-            _vibratorStatus = Status.UNAVAILABLE
+            _vibrationStatus = Status.UNAVAILABLE
         }
         //endregion
 
@@ -119,13 +119,13 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         sharedPreferences.edit()
                 .putString(SHARED_PREF_FLASHLIGHT, _flashStatus.toString())
                 .putString(SHARED_PREF_SOUND, _soundStatus.toString())
-                .putString(SHARED_PREF_VIBRATOR, _vibratorStatus.toString())
+                .putString(SHARED_PREF_VIBRATION, _vibrationStatus.toString())
                 .apply()
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        _morsePlayer.removeAllListener()
+        _morsePlayer.removeAllMorseOutput()
     }
 
     private fun setButtonText() {
@@ -170,7 +170,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
 
         updateFlashLightMenuIcon()
         updateSoundMenuIcon()
-        updateVibratorMenuIcon()
+        updateVibrationMenuIcon()
 
         return true
     }
@@ -180,7 +180,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
             R.id.action_flash_light -> {
                 when (_flashStatus) {
                     Status.ON -> {
-                        _morsePlayer.removeListener(_flashListener)
+                        _morsePlayer.removeMorseOutput(_morseFlashPlayer)
                         _flashStatus = Status.OFF
                     }
                     Status.OFF -> {
@@ -195,11 +195,11 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
             R.id.action_sound -> {
                 when (_soundStatus) {
                     Status.ON -> {
-//                        _morsePlayer.removeListener(_soundListener)
+                        _morsePlayer.removeMorseOutput(_morseSoundPlayer)
                         _soundStatus = Status.OFF
                     }
                     Status.OFF -> {
-//                        _morsePlayer.addListener(_soundListener)
+                        _morsePlayer.addMorseOutput(_morseSoundPlayer)
                         _soundStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
@@ -208,21 +208,21 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
                 }
                 updateSoundMenuIcon()
             }
-            R.id.action_vibrator -> {
-                when (_vibratorStatus) {
+            R.id.action_vibration -> {
+                when (_vibrationStatus) {
                     Status.ON -> {
-                        _morsePlayer.removeListener(_vibratorListener)
-                        _vibratorStatus = Status.OFF
+                        _morsePlayer.removeMorseOutput(_morseVibrationPlayer)
+                        _vibrationStatus = Status.OFF
                     }
                     Status.OFF -> {
-                        _morsePlayer.addListener(_vibratorListener)
-                        _vibratorStatus = Status.ON
+                        _morsePlayer.addMorseOutput(_morseVibrationPlayer)
+                        _vibrationStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
-                        Toast.makeText(this, "Vibrator not available", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Vibration not available", Toast.LENGTH_SHORT).show()
                     }
                 }
-                updateVibratorMenuIcon()
+                updateVibrationMenuIcon()
             }
         }
         return super.onOptionsItemSelected(item)
@@ -244,11 +244,11 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         }
     }
 
-    private fun updateVibratorMenuIcon() {
-        when (_vibratorStatus) {
-            Status.ON -> _menu?.findItem(R.id.action_vibrator)?.setIcon(R.drawable.ic_vibrator_on)
-            Status.OFF -> _menu?.findItem(R.id.action_vibrator)?.setIcon(R.drawable.ic_vibrator_off)
-            Status.UNAVAILABLE -> _menu?.findItem(R.id.action_vibrator)?.icon = getTransparentIcon(R.drawable.ic_vibrator_off)
+    private fun updateVibrationMenuIcon() {
+        when (_vibrationStatus) {
+            Status.ON -> _menu?.findItem(R.id.action_vibration)?.setIcon(R.drawable.ic_vibration_on)
+            Status.OFF -> _menu?.findItem(R.id.action_vibration)?.setIcon(R.drawable.ic_vibration_off)
+            Status.UNAVAILABLE -> _menu?.findItem(R.id.action_vibration)?.icon = getTransparentIcon(R.drawable.ic_vibration_off)
         }
     }
 
@@ -260,20 +260,20 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
     //endregion
 
     /**
-     * Add [FlashLightControllerInterface] to the [_morsePlayer].
-     * As [FlashLightOldController] requires camera permission, if permission isn't granted, ask
-     * the permission to the user. WARNING, in this case, no listener are added to [_morsePlayer].
+     * Add [MorseFlashLightPlayerInterface] to the [_morsePlayer].
+     * As [MorseFlashLightOldPlayer] requires camera permission, if permission isn't granted, ask
+     * the permission to the user. WARNING, in this case, no morsePlayer are added to [_morsePlayer].
      * This method update [_flashStatus].
      * @param forceRequest if true and permission already refused, display a SnackBar to explain.
      */
     private fun addFlashControllerOrRequestPermission(forceRequest: Boolean) {
         if (_flashStatus != Status.UNAVAILABLE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                _morsePlayer.addListener(_flashListener)
+                _morsePlayer.addMorseOutput(_morseFlashPlayer)
                 _flashStatus = Status.ON
             } else {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    _morsePlayer.addListener(_flashListener)
+                    _morsePlayer.addMorseOutput(_morseFlashPlayer)
                     _flashStatus = Status.ON
                 } else {
                     // need to request permission, and check if user already refused.
@@ -295,13 +295,13 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
     }
 
     /**
-     * Return the right [FlashLightControllerInterface] depending of the android API version.
+     * Return the right [MorseFlashLightPlayerInterface] depending of the android API version.
      */
-    private fun getCameraController(): FlashLightControllerInterface {
+    private fun getCameraController(): MorseFlashLightPlayerInterface {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            FlashLightController(this)
+            MorseFlashLightPlayer(this)
         } else {
-            FlashLightOldController()
+            MorseFlashLightOldPlayer()
         }
     }
 
@@ -312,7 +312,7 @@ class MainActivity : AppCompatActivity(), MorsePlayerListenerInterface {
         when (requestCode) {
             CAMERA_PERMISSION_REQUEST_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    _morsePlayer.addListener(_flashListener)
+                    _morsePlayer.addMorseOutput(_morseFlashPlayer)
                     _flashStatus = Status.ON
                     updateFlashLightMenuIcon()
                 }

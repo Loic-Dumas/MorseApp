@@ -5,6 +5,6 @@
     <string name="enter_a_text">Enter a text</string>
     <string name="flash_light">Flash Light</string>
     <string name="sound">Sound</string>
-    <string name="vibrator">Vibrator</string>
+    <string name="vibration">Vibration</string>
     <string name="camera_required">Camera required to use flash light.</string>
 </resources>

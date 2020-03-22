@@ -1,4 +1,4 @@
-package com.loic.morseapp.controller
+package com.loic.morseapp.morseplayer
 
 import android.content.Context
 import android.hardware.camera2.CameraAccessException
@@ -8,15 +8,15 @@ import android.support.annotation.RequiresApi
 import android.util.Log
 
 /**
- * Implementation of MorsePlayerListenerInterface for the flash Light.
+ * Implementation of MorseFlashLightPlayerInterface for the flash Light.
  * This implementation uses the new android.hardware.camera2
  * Allow to switch on and off the device FlashLight
  */
 @RequiresApi(Build.VERSION_CODES.M)
-class FlashLightController(context: Context) : FlashLightControllerInterface {
+class MorseFlashLightPlayer(context: Context) : MorseFlashLightPlayerInterface {
 
     companion object {
-        const val TAG = "FlashLightController"
+        const val TAG = "MorseFlashLightPlayer"
     }
 
     private val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager

@@ -1,6 +1,6 @@
-package com.loic.morseapp.controller
+package com.loic.morseapp.morseplayer
 
-class SoundController : MorsePlayerListenerInterface {
+class MorseSoundPlayer : MorseOutputPlayerInterface {
     override fun switchOn() {
         TODO("Not yet implemented")
     }

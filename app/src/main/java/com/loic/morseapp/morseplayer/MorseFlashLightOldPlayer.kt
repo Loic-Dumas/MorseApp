@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package com.loic.morseapp.controller
+package com.loic.morseapp.morseplayer
 
 import android.hardware.Camera
 import android.hardware.Camera.Parameters
@@ -9,15 +9,17 @@ import android.util.Log
 import kotlin.concurrent.thread
 
 /**
- * Implementation of MorsePlayerListenerInterface for the flash Light.
+ * Implementation of MorseFlashLightPlayerInterface for the flash Light.
+ *
+ * Warning, this class
  * This implementation uses deprecated android.hardware.camera for devices below Api 23.
  * Thread are needed as Camera is very slow.
  * Allow to switch on and off the device FlashLight.
  */
-class FlashLightOldController : FlashLightControllerInterface {
+class MorseFlashLightOldPlayer : MorseFlashLightPlayerInterface {
 
     companion object {
-        const val TAG = "FlashLightOldController"
+        const val TAG = "MorseFlashLightOld"
     }
 
     private var camera: Camera? = null

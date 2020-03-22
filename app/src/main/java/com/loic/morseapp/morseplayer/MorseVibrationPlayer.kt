@@ -1,4 +1,4 @@
-package com.loic.morseapp.controller
+package com.loic.morseapp.morseplayer
 
 import android.content.Context
 import android.os.Build
@@ -7,9 +7,9 @@ import android.os.Vibrator
 import android.support.annotation.RequiresApi
 
 /**
- * Class used to manage the vibrator
+ * [MorseOutputPlayerInterface] implementation for the vibration.
  */
-class VibratorController(context: Context) : MorsePlayerListenerInterface {
+class MorseVibrationPlayer(context: Context) : MorseOutputPlayerInterface {
 
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
@@ -37,6 +37,4 @@ class VibratorController(context: Context) : MorsePlayerListenerInterface {
 
     override fun onMorseCharacterChanged(letterIndex: Int) {}
 
-
-    // TODO check if device has vibrator
 }

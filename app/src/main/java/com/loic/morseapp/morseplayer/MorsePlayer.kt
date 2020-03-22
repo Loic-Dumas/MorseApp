@@ -1,10 +1,10 @@
-package com.loic.morseapp.controller
+package com.loic.morseapp.morseplayer
 
 import android.os.CountDownTimer
 import android.util.Log
 
 /**
- * Created by loic.dumas on 19/01/2018.
+ * Morse
  */
 class MorsePlayer {
 
@@ -12,25 +12,25 @@ class MorsePlayer {
         const val TIME_LENGTH: Long = 300
     }
 
-    private val _listeners = ArrayList<MorsePlayerListenerInterface>()
+    private val _morseOutputPlayers = ArrayList<MorseOutputPlayerInterface>()
     private var _timer: CountDownTimer? = null
 
-    fun addListener(listener: MorsePlayerListenerInterface) {
-        _listeners.add(listener)
+    fun addMorseOutput(output: MorseOutputPlayerInterface) {
+        _morseOutputPlayers.add(output)
     }
 
-    fun removeListener(listener: MorsePlayerListenerInterface) {
-        listener.switchOff()
-        _listeners.remove(listener)
+    fun removeMorseOutput(output: MorseOutputPlayerInterface) {
+        output.switchOff()
+        _morseOutputPlayers.remove(output)
     }
 
-    fun removeAllListener() {
-        _listeners.clear()
+    fun removeAllMorseOutput() {
+        _morseOutputPlayers.clear()
     }
 
     /**
      * @param morseCode a String in morse code, so only composed by . - or spaces
-     * When the play() method is launched, player listeners are called when they need to change the state.
+     * When the play() method is launched, player outputs are called when they need to change the state.
      */
     fun play(morseCode: String) {
         // mechanism : the morseCode string is transformed into an array of boolean
@@ -57,8 +57,8 @@ class MorsePlayer {
 
                     // notify if we switchOn or Off
                     if (previousState != currentSignal.activated) {
-                        if (currentSignal.activated) switchOnListeners()
-                        else switchOffListeners()
+                        if (currentSignal.activated) switchOnOutputs()
+                        else switchOffOutputs()
 
                         previousState = currentSignal.activated
                     }
@@ -87,12 +87,12 @@ class MorsePlayer {
      */
     fun stop() {
         _timer?.cancel()
-        switchOffListeners()
+        switchOffOutputs()
         notifyPlayerFinished()
     }
 
     /**
-     * @param activated : if true, the listener should be switch on, and switch off if false
+     * @param activated : if true, the output should be switch on, and switch off if false
      */
     private class Signal(val activated: Boolean, val charIndex: Int) {
         override fun toString(): String {
@@ -119,27 +119,27 @@ class MorsePlayer {
         return morseSignal
     }
 
-    private fun switchOnListeners() {
-        _listeners.forEach { it.switchOn() }
+    private fun switchOnOutputs() {
+        _morseOutputPlayers.forEach { it.switchOn() }
     }
 
-    private fun switchOffListeners() {
-        _listeners.forEach { it.switchOff() }
+    private fun switchOffOutputs() {
+        _morseOutputPlayers.forEach { it.switchOff() }
     }
 
     private fun notifyCharacterChanged(letterIndex: Int) {
-        _listeners.forEach { it.onMorseCharacterChanged(letterIndex) }
+        _morseOutputPlayers.forEach { it.onMorseCharacterChanged(letterIndex) }
     }
 
     private fun notifyTotalProgress(percent: Float) {
-        _listeners.forEach { it.onTotalProgressChanged(percent) }
+        _morseOutputPlayers.forEach { it.onTotalProgressChanged(percent) }
     }
 
     private fun notifyPlayerStarted() {
-        _listeners.forEach { it.onPlayerStarted() }
+        _morseOutputPlayers.forEach { it.onPlayerStarted() }
     }
 
     private fun notifyPlayerFinished() {
-        _listeners.forEach { it.onPlayerFinished() }
+        _morseOutputPlayers.forEach { it.onPlayerFinished() }
     }
 }

@@ -4,7 +4,6 @@ import java.util.*
 
 /**
  * Convert alpha text to Morse code, or decode Morse
- * Created by Loïc DUMAS on 29/12/17.
  */
 class MorseConverter {
 

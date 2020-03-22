@@ -4,7 +4,7 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 /**
- * Created by Loïc DUMAS on 13/01/18.
+ * Unit test for [MorseConverter].
  */
 class MorseConverterTest {
 

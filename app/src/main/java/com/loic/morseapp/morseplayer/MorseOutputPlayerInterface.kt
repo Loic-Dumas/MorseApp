@@ -1,9 +1,9 @@
-package com.loic.morseapp.controller
+package com.loic.morseapp.morseplayer
 
 /**
  * Created by loic.dumas on 19/01/2018.
  */
-interface MorsePlayerListenerInterface {
+interface MorseOutputPlayerInterface {
     fun switchOn()
     fun switchOff()
     fun onPlayerStarted()
