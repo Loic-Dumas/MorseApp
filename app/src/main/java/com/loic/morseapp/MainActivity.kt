@@ -20,10 +20,11 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
-import com.loic.morseapp.morseplayer.*
 import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
+import com.loic.morseapp.morseplayer.*
+import com.loic.morseapp.util.SingleToast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -156,9 +157,9 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
             try {
                 tvTextResult.text = MorseConverter.convertMorseToAlpha(text)
             } catch (e: UnexpectedCharacterException) {
-                Toast.makeText(this, "${e.char} is forbidden, only - . and spaces are allowed.", Toast.LENGTH_SHORT).show()
+                SingleToast.showToast(this, "${e.char} is forbidden, only - . and spaces are allowed.", Toast.LENGTH_SHORT)
             } catch (e: UnknownMorseCharacterException) {
-                Toast.makeText(this, "Impossible to recognize this Character : ${e.morseChar}", Toast.LENGTH_SHORT).show()
+                SingleToast.showToast(this, "Impossible to recognize this Character : ${e.morseChar}", Toast.LENGTH_SHORT)
             }
         }
     }
@@ -187,7 +188,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
                         addFlashControllerOrRequestPermission(true)
                     }
                     Status.UNAVAILABLE -> {
-                        Toast.makeText(this, "Flash not available", Toast.LENGTH_SHORT).show()
+                        SingleToast.showToast(this, "Flash not available", Toast.LENGTH_SHORT)
                     }
                 }
                 updateFlashLightMenuIcon()
@@ -203,7 +204,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
                         _soundStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
-                        Toast.makeText(this, "Sound not available", Toast.LENGTH_SHORT).show()
+                        SingleToast.showToast(this, "Sound not available", Toast.LENGTH_SHORT)
                     }
                 }
                 updateSoundMenuIcon()
@@ -219,7 +220,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
                         _vibrationStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
-                        Toast.makeText(this, "Vibration not available", Toast.LENGTH_SHORT).show()
+                        SingleToast.showToast(this, "Vibration not available", Toast.LENGTH_SHORT)
                     }
                 }
                 updateVibrationMenuIcon()
@@ -330,13 +331,11 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
     }
 
     override fun onPlayerStarted() {
-        Toast.makeText(this, "starting", Toast.LENGTH_SHORT).show()
     }
 
     override fun onPlayerFinished() {
         viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
         tvTextResult.text = tvTextResult.text.toString()
-        Toast.makeText(this, "Over", Toast.LENGTH_SHORT).show()
 
         tvTextResult.text = SpannableString(tvTextResult.text.toString())
     }
