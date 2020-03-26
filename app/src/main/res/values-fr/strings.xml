@@ -9,4 +9,6 @@
     <string name="vibration">Vibration</string>
     <string name="camera_required">La permission d\'accès à la caméra est nécessaire pour utiliser le flash.</string>
     <string name="swap_mode">Changer de mode</string>
+    <string name="play">Lancer</string>
+    <string name="stop">Arrêter</string>
 </resources>

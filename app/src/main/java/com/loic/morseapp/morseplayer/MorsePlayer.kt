@@ -16,14 +16,16 @@ class MorsePlayer {
     private var _timer: CountDownTimer? = null
 
     fun addMorseOutputPlayer(player: MorseOutputPlayerInterface) {
-        player.onPlayerAdded()
-        _morseOutputPlayers.add(player)
+        if (!_morseOutputPlayers.contains(player)) {
+            player.onPlayerAdded()
+            _morseOutputPlayers.add(player)
+        }
     }
 
     fun removeMorseOutputPlayer(player: MorseOutputPlayerInterface) {
         player.switchOff()
         player.onPlayerRemoved()
-        _morseOutputPlayers.remove(player)
+        _morseOutputPlayers.removeAll(listOf(player))
     }
 
     fun removeAllMorseOutputPlayer() {

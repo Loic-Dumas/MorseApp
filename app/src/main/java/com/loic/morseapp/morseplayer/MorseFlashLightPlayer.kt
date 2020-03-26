@@ -4,8 +4,8 @@ import android.content.Context
 import android.hardware.camera2.CameraAccessException
 import android.hardware.camera2.CameraManager
 import android.os.Build
-import androidx.annotation.RequiresApi
 import android.util.Log
+import androidx.annotation.RequiresApi
 
 /**
  * Implementation of MorseFlashLightPlayerInterface for the flash Light.

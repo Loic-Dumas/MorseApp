@@ -135,9 +135,9 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
 
     private fun setButtonText() {
         if (_alphaTextToMorse) {
-            supportActionBar?.title =  getString(R.string.letters_to_morse)
+            supportActionBar?.title = getString(R.string.letters_to_morse)
         } else {
-            supportActionBar?.title =  getString(R.string.morse_to_letters)
+            supportActionBar?.title = getString(R.string.morse_to_letters)
         }
     }
 
