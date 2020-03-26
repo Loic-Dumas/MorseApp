@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
         //region Set the view (button, ...)
         setButtonText()
 
-        btConvertMode.setOnClickListener {
+        btSwapMode.setOnClickListener {
             _morsePlayer.stop()
             _alphaTextToMorse = !_alphaTextToMorse
             etTextToConvert.setText(tvTextResult.text.toString()) //swap text
@@ -135,9 +135,9 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
 
     private fun setButtonText() {
         if (_alphaTextToMorse) {
-            btConvertMode.text = getString(R.string.toMorse)
+            supportActionBar?.title =  getString(R.string.letters_to_morse)
         } else {
-            btConvertMode.text = getString(R.string.toString)
+            supportActionBar?.title =  getString(R.string.morse_to_letters)
         }
     }
 
@@ -147,6 +147,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
      */
     private val onTextToTranslateChanged = object : TextWatcher {
         override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            _morsePlayer.stop()
             convertText(sequence.toString())
         }
 

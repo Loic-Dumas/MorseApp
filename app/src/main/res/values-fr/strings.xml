@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">1 Morse App FR</string>
-    <string name="toString">en text</string>
-    <string name="toMorse">en morse</string>
+    <string name="morse_to_letters">Morse -> Texte</string>
+    <string name="letters_to_morse">Texte -> morse</string>
     <string name="enter_a_text">Entrez un text</string>
     <string name="flash_light">Lumière</string>
     <string name="sound">Son</string>
     <string name="vibration">Vibration</string>
     <string name="camera_required">La permission d\'accès à la caméra est nécessaire pour utiliser le flash.</string>
+    <string name="swap_mode">Changer de mode</string>
 </resources>

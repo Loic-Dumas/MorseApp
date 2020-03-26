@@ -10,4 +10,6 @@
     <color name="whiteColor">#FFF</color>
     <color name="switchOnColor">#f9cd3c</color>
     <color name="switchOffColor">#FFF</color>
+
+    <color name="morse_grey">#33999999</color>
 </resources>
