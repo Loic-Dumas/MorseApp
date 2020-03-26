@@ -6,7 +6,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 
 /**
- * [MorseOutputPlayer] implementation for the vibration.
+ * [MorsePlayer.MorseOutputPlayer] implementation for the vibration.
  */
 class MorseVibrationPlayer(context: Context) : MorsePlayer.MorseOutputPlayer {
 

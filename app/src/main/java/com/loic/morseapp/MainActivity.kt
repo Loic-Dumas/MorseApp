@@ -274,6 +274,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
      */
     private fun addFlashControllerOrRequestPermission(forceRequest: Boolean) {
         if (_flashStatus != Status.UNAVAILABLE) {
+            // if sdk version >= M -> we can use Camera2, otherwise, we need to request permission for old Camera
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                 _morsePlayer.addMorseOutputPlayer(_morseFlashPlayer)
                 _flashStatus = Status.ON

@@ -43,6 +43,7 @@ class MorseSoundPlayer(context: Context) : MorsePlayer.MorseOutputPlayer {
     }
 
     override fun onPlayerFinished() {
+        switchOff()
     }
 
     override fun onTotalProgressChanged(progress: Float) {

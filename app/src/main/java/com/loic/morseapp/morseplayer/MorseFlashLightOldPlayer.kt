@@ -26,9 +26,26 @@ class MorseFlashLightOldPlayer : MorseFlashLightPlayerInterface {
     private var parameters: Parameters? = null
 
     override fun onPlayerAdded() {
+        try {
+            camera = open()
+            parameters = camera?.parameters
+
+        } catch (e: Exception) {
+            Log.d(TAG, "Exception received when trying to open the camera. " +
+                    "Camera probably already in use : $e")
+        }
     }
 
     override fun onPlayerRemoved() {
+        try {
+            camera?.release()
+            camera = null
+            parameters = null
+
+        } catch (e: Exception) {
+            Log.d(TAG, "Exception received when trying to release the Camera. " +
+                    "Camera probably already in use by another device, or already release :  $e")
+        }
     }
 
     override fun switchOn() {
@@ -49,6 +66,7 @@ class MorseFlashLightOldPlayer : MorseFlashLightPlayerInterface {
                 camera?.startPreview()
 
             } catch (e: Exception) {
+                camera = null
                 Log.d(TAG, "Exception received when trying to switch on the flash. " +
                         "Camera probably already in use : $e")
             }
@@ -63,6 +81,7 @@ class MorseFlashLightOldPlayer : MorseFlashLightPlayerInterface {
                 camera?.stopPreview()
 
             } catch (e: Exception) {
+                camera = null
                 Log.d(TAG, "Exception received when trying to switch off the flash. " +
                         "Camera probably already in use or null : $e")
 
@@ -70,28 +89,9 @@ class MorseFlashLightOldPlayer : MorseFlashLightPlayerInterface {
         }
     }
 
-    override fun onPlayerStarted() {
-        try {
-            camera = open()
-            parameters = camera?.parameters
+    override fun onPlayerStarted() {}
 
-        } catch (e: Exception) {
-            Log.d(TAG, "Exception received when trying to open the camera. " +
-                    "Camera probably already in use : $e")
-        }
-    }
-
-    override fun onPlayerFinished() {
-        try {
-            camera?.release()
-            camera = null
-            parameters = null
-
-        } catch (e: Exception) {
-            Log.d(TAG, "Exception received when trying to release the Camera. " +
-                    "Camera probably already in use by another device, or already release :  $e")
-        }
-    }
+    override fun onPlayerFinished() {}
 
     override fun onTotalProgressChanged(progress: Float) {}
 
