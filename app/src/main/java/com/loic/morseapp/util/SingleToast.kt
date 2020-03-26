@@ -11,9 +11,17 @@ import android.widget.Toast
 class SingleToast {
 
     companion object {
-        private var toast : Toast? = null
+        private var toast: Toast? = null
 
-        fun showToast(context : Context, text : String, duration : Int) {
+        fun showShortToast(context: Context, text: String) {
+            showToast(context, text, Toast.LENGTH_SHORT)
+        }
+
+        fun showLongToast(context: Context, text: String) {
+            showToast(context, text, Toast.LENGTH_LONG)
+        }
+
+        fun showToast(context: Context, text: String, duration: Int) {
             toast?.cancel()
             toast = Toast.makeText(context, text, duration)
             toast?.show()

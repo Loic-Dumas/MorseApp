@@ -19,7 +19,6 @@ import android.text.style.BackgroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
-import android.widget.Toast
 import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
@@ -157,9 +156,9 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
             try {
                 tvTextResult.text = MorseConverter.convertMorseToAlpha(text)
             } catch (e: UnexpectedCharacterException) {
-                SingleToast.showToast(this, "${e.char} is forbidden, only - . and spaces are allowed.", Toast.LENGTH_SHORT)
+                SingleToast.showShortToast(this, "${e.char} is forbidden, only - . and spaces are allowed.")
             } catch (e: UnknownMorseCharacterException) {
-                SingleToast.showToast(this, "Impossible to recognize this Character : ${e.morseChar}", Toast.LENGTH_SHORT)
+                SingleToast.showShortToast(this, "Impossible to recognize this Character : ${e.morseChar}")
             }
         }
     }
@@ -188,7 +187,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
                         addFlashControllerOrRequestPermission(true)
                     }
                     Status.UNAVAILABLE -> {
-                        SingleToast.showToast(this, "Flash not available", Toast.LENGTH_SHORT)
+                        SingleToast.showShortToast(this, "Flash not available")
                     }
                 }
                 updateFlashLightMenuIcon()
@@ -204,7 +203,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
                         _soundStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
-                        SingleToast.showToast(this, "Sound not available", Toast.LENGTH_SHORT)
+                        SingleToast.showShortToast(this, "Sound not available")
                     }
                 }
                 updateSoundMenuIcon()
@@ -220,7 +219,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
                         _vibrationStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
-                        SingleToast.showToast(this, "Vibration not available", Toast.LENGTH_SHORT)
+                        SingleToast.showShortToast(this, "Vibration not available")
                     }
                 }
                 updateVibrationMenuIcon()
