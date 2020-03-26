@@ -9,22 +9,25 @@ import android.util.Log
 class MorsePlayer {
 
     companion object {
-        const val TIME_LENGTH: Long = 300
+        const val TIME_LENGTH: Long = 150
     }
 
     private val _morseOutputPlayers = ArrayList<MorseOutputPlayerInterface>()
     private var _timer: CountDownTimer? = null
 
-    fun addMorseOutput(output: MorseOutputPlayerInterface) {
-        _morseOutputPlayers.add(output)
+    fun addMorseOutputPlayer(player: MorseOutputPlayerInterface) {
+        player.onPlayerAdded()
+        _morseOutputPlayers.add(player)
     }
 
-    fun removeMorseOutput(output: MorseOutputPlayerInterface) {
-        output.switchOff()
-        _morseOutputPlayers.remove(output)
+    fun removeMorseOutputPlayer(player: MorseOutputPlayerInterface) {
+        player.switchOff()
+        player.onPlayerRemoved()
+        _morseOutputPlayers.remove(player)
     }
 
-    fun removeAllMorseOutput() {
+    fun removeAllMorseOutputPlayer() {
+        _morseOutputPlayers.forEach { it.onPlayerRemoved() }
         _morseOutputPlayers.clear()
     }
 

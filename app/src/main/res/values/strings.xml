@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">MorseApp</string>
+    <string name="app_name">1 Morse App</string>
     <string name="toString">to text</string>
     <string name="toMorse">to morse</string>
     <string name="enter_a_text">Enter a text</string>
     <string name="flash_light">Flash Light</string>
     <string name="sound">Sound</string>
     <string name="vibration">Vibration</string>
-    <string name="camera_required">Camera required to use flash light.</string>
+    <string name="camera_required">Camera permission required to use flash light.</string>
 </resources>

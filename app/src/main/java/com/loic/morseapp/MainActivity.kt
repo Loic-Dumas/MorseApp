@@ -8,10 +8,6 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
-import com.google.android.material.snackbar.Snackbar
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.appcompat.app.AppCompatActivity
 import android.text.Editable
 import android.text.SpannableString
 import android.text.TextWatcher
@@ -19,6 +15,10 @@ import android.text.style.BackgroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import com.google.android.material.snackbar.Snackbar
 import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
@@ -40,7 +40,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
     private val _morsePlayer = MorsePlayer()
     private var _alphaTextToMorse = true
     private val _morseFlashPlayer: MorseFlashLightPlayerInterface by lazy { getCameraController() }
-    private val _morseSoundPlayer: MorseSoundPlayer by lazy { MorseSoundPlayer() }
+    private val _morseSoundPlayer: MorseSoundPlayer by lazy { MorseSoundPlayer(this) }
     private val _morseVibrationPlayer: MorseVibrationPlayer by lazy { MorseVibrationPlayer(this) }
 
     private var _menu: Menu? = null
@@ -59,8 +59,8 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
         _soundStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_SOUND, Status.ON.toString()))
         _vibrationStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_VIBRATION, Status.ON.toString()))
 
-        //region Init player by adding player
-        _morsePlayer.addMorseOutput(this)
+        //region Init player by adding output players
+        _morsePlayer.addMorseOutputPlayer(this)
 
         // Add flash light morse player
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_CAMERA_FLASH)) {
@@ -71,14 +71,19 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
             _flashStatus = Status.UNAVAILABLE
         }
 
-        // todo Add sound morsePlayer
         // Add sound morse player
-        _soundStatus = Status.UNAVAILABLE
+        if (packageManager.hasSystemFeature(PackageManager.FEATURE_AUDIO_OUTPUT)) {
+            if (_soundStatus == Status.ON) {
+                _morsePlayer.addMorseOutputPlayer(_morseSoundPlayer)
+            }
+        } else {
+            _soundStatus = Status.UNAVAILABLE
+        }
 
         // Add vibration morse player
         if ((getSystemService(Context.VIBRATOR_SERVICE) as Vibrator).hasVibrator()) {
             if (_vibrationStatus == Status.ON) {
-                _morsePlayer.addMorseOutput(_morseVibrationPlayer)
+                _morsePlayer.addMorseOutputPlayer(_morseVibrationPlayer)
             }
         } else {
             _vibrationStatus = Status.UNAVAILABLE
@@ -125,7 +130,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
 
     override fun onDestroy() {
         super.onDestroy()
-        _morsePlayer.removeAllMorseOutput()
+        _morsePlayer.removeAllMorseOutputPlayer()
     }
 
     private fun setButtonText() {
@@ -180,7 +185,7 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
             R.id.action_flash_light -> {
                 when (_flashStatus) {
                     Status.ON -> {
-                        _morsePlayer.removeMorseOutput(_morseFlashPlayer)
+                        _morsePlayer.removeMorseOutputPlayer(_morseFlashPlayer)
                         _flashStatus = Status.OFF
                     }
                     Status.OFF -> {
@@ -195,11 +200,11 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
             R.id.action_sound -> {
                 when (_soundStatus) {
                     Status.ON -> {
-                        _morsePlayer.removeMorseOutput(_morseSoundPlayer)
+                        _morsePlayer.removeMorseOutputPlayer(_morseSoundPlayer)
                         _soundStatus = Status.OFF
                     }
                     Status.OFF -> {
-                        _morsePlayer.addMorseOutput(_morseSoundPlayer)
+                        _morsePlayer.addMorseOutputPlayer(_morseSoundPlayer)
                         _soundStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
@@ -211,11 +216,11 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
             R.id.action_vibration -> {
                 when (_vibrationStatus) {
                     Status.ON -> {
-                        _morsePlayer.removeMorseOutput(_morseVibrationPlayer)
+                        _morsePlayer.removeMorseOutputPlayer(_morseVibrationPlayer)
                         _vibrationStatus = Status.OFF
                     }
                     Status.OFF -> {
-                        _morsePlayer.addMorseOutput(_morseVibrationPlayer)
+                        _morsePlayer.addMorseOutputPlayer(_morseVibrationPlayer)
                         _vibrationStatus = Status.ON
                     }
                     Status.UNAVAILABLE -> {
@@ -269,11 +274,11 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
     private fun addFlashControllerOrRequestPermission(forceRequest: Boolean) {
         if (_flashStatus != Status.UNAVAILABLE) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                _morsePlayer.addMorseOutput(_morseFlashPlayer)
+                _morsePlayer.addMorseOutputPlayer(_morseFlashPlayer)
                 _flashStatus = Status.ON
             } else {
                 if (ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
-                    _morsePlayer.addMorseOutput(_morseFlashPlayer)
+                    _morsePlayer.addMorseOutputPlayer(_morseFlashPlayer)
                     _flashStatus = Status.ON
                 } else {
                     // need to request permission, and check if user already refused.
@@ -312,12 +317,18 @@ class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
         when (requestCode) {
             CAMERA_PERMISSION_REQUEST_CODE -> {
                 if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
-                    _morsePlayer.addMorseOutput(_morseFlashPlayer)
+                    _morsePlayer.addMorseOutputPlayer(_morseFlashPlayer)
                     _flashStatus = Status.ON
                     updateFlashLightMenuIcon()
                 }
             }
         }
+    }
+
+    override fun onPlayerAdded() {
+    }
+
+    override fun onPlayerRemoved() {
     }
 
     //region MorsePlayerListenerInterface implementation

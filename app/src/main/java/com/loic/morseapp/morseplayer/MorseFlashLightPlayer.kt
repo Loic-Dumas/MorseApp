@@ -21,6 +21,12 @@ class MorseFlashLightPlayer(context: Context) : MorseFlashLightPlayerInterface {
 
     private val cameraManager = context.getSystemService(Context.CAMERA_SERVICE) as CameraManager
 
+    override fun onPlayerAdded() {
+    }
+
+    override fun onPlayerRemoved() {
+    }
+
     override fun switchOn() {
         try {
             cameraManager.setTorchMode(cameraManager.cameraIdList[0], true)

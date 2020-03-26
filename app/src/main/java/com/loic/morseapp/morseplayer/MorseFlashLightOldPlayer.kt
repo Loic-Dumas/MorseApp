@@ -25,6 +25,12 @@ class MorseFlashLightOldPlayer : MorseFlashLightPlayerInterface {
     private var camera: Camera? = null
     private var parameters: Parameters? = null
 
+    override fun onPlayerAdded() {
+    }
+
+    override fun onPlayerRemoved() {
+    }
+
     override fun switchOn() {
         thread(start = true) {
             try {
