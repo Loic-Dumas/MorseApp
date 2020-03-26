@@ -9,7 +9,7 @@ import com.google.android.exoplayer2.upstream.RawResourceDataSource
 import com.google.android.exoplayer2.util.Util
 import com.loic.morseapp.R
 
-class MorseSoundPlayer(context: Context) : MorseOutputPlayerInterface {
+class MorseSoundPlayer(context: Context) : MorsePlayer.MorseOutputPlayer {
 
     private val _context = context
     private val _dataSourceFactory = DefaultDataSourceFactory(context,

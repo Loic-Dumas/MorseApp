@@ -27,7 +27,7 @@ import com.loic.morseapp.util.SingleToast
 import kotlinx.android.synthetic.main.activity_main.*
 
 
-class MainActivity : AppCompatActivity(), MorseOutputPlayerInterface {
+class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
     companion object {
         private const val CAMERA_PERMISSION_REQUEST_CODE = 565

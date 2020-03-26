@@ -2,27 +2,29 @@ package com.loic.morseapp.morseplayer
 
 import android.os.CountDownTimer
 import android.util.Log
+import com.loic.morseapp.morseplayer.MorsePlayer.MorseOutputPlayer
 
 /**
- * Morse
+ * [MorsePlayer] plays a morse sequence by calling output (Flashlight, sound, ...).
+ * These output implement [MorseOutputPlayer].
  */
 class MorsePlayer {
 
     companion object {
-        const val TIME_LENGTH: Long = 150
+        const val TIME_LENGTH: Long = 160
     }
 
-    private val _morseOutputPlayers = ArrayList<MorseOutputPlayerInterface>()
+    private val _morseOutputPlayers = ArrayList<MorseOutputPlayer>()
     private var _timer: CountDownTimer? = null
 
-    fun addMorseOutputPlayer(player: MorseOutputPlayerInterface) {
+    fun addMorseOutputPlayer(player: MorseOutputPlayer) {
         if (!_morseOutputPlayers.contains(player)) {
             player.onPlayerAdded()
             _morseOutputPlayers.add(player)
         }
     }
 
-    fun removeMorseOutputPlayer(player: MorseOutputPlayerInterface) {
+    fun removeMorseOutputPlayer(player: MorseOutputPlayer) {
         player.switchOff()
         player.onPlayerRemoved()
         _morseOutputPlayers.removeAll(listOf(player))
@@ -146,5 +148,28 @@ class MorsePlayer {
 
     private fun notifyPlayerFinished() {
         _morseOutputPlayers.forEach { it.onPlayerFinished() }
+    }
+
+    /**
+     * Output triggered by [MorsePlayer] must implement this interface.
+     */
+    interface MorseOutputPlayer {
+        /**
+         * This is called when the player is added to [MorsePlayer].
+         * Initialisation of the output must be done here.
+         */
+        fun onPlayerAdded()
+
+        /**
+         * This is called when the player is removed of [MorsePlayer].
+         * If the output used need to be released, this must be done here.
+         */
+        fun onPlayerRemoved()
+        fun switchOn()
+        fun switchOff()
+        fun onPlayerStarted()
+        fun onPlayerFinished()
+        fun onTotalProgressChanged(progress: Float)
+        fun onMorseCharacterChanged(letterIndex: Int)
     }
 }

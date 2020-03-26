@@ -6,9 +6,9 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 
 /**
- * [MorseOutputPlayerInterface] implementation for the vibration.
+ * [MorseOutputPlayer] implementation for the vibration.
  */
-class MorseVibrationPlayer(context: Context) : MorseOutputPlayerInterface {
+class MorseVibrationPlayer(context: Context) : MorsePlayer.MorseOutputPlayer {
 
     private val vibrator = context.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
 
