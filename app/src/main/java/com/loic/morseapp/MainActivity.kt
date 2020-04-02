@@ -93,18 +93,10 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         //region Set the view (button, ...)
         setButtonText()
 
-        btSwapMode.setOnClickListener {
-            _morsePlayer.stop()
-            _alphaTextToMorse = !_alphaTextToMorse
-            etTextToConvert.setText(tvTextResult.text.toString()) //swap text
-            etTextToConvert.setSelection(etTextToConvert.length()) //move cursor at the end of text
-            setButtonText()
-        }
-
-        etTextToConvert.addTextChangedListener(onTextToTranslateChanged)
+        etAlphaTextToTranslate.addTextChangedListener(onTextToTranslateChanged)
 
         btPlay.setOnClickListener {
-            _morsePlayer.play(tvTextResult.text.toString())
+            _morsePlayer.play(tvMorseCode.text.toString())
             if (currentFocus != null) {
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
@@ -157,10 +149,10 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
     private fun convertText(text: String) {
         if (_alphaTextToMorse) {
-            tvTextResult.text = MorseConverter.convertAlphaToMorse(text)
+            tvMorseCode.text = MorseConverter.convertAlphaToMorse(text)
         } else {
             try {
-                tvTextResult.text = MorseConverter.convertMorseToAlpha(text)
+                tvMorseCode.text = MorseConverter.convertMorseToAlpha(text)
             } catch (e: UnexpectedCharacterException) {
                 SingleToast.showShortToast(this, "${e.char} is forbidden, only - . and spaces are allowed.")
             } catch (e: UnknownMorseCharacterException) {
@@ -335,31 +327,28 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
     //region MorsePlayerListenerInterface implementation
     override fun switchOn() {
-        viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOnColor))
     }
 
     override fun switchOff() {
-        viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
     }
 
     override fun onPlayerStarted() {
     }
 
     override fun onPlayerFinished() {
-        viewOutput.setBackgroundColor(ContextCompat.getColor(this, R.color.switchOffColor))
-        tvTextResult.text = tvTextResult.text.toString()
+        tvMorseCode.text = tvMorseCode.text.toString()
 
-        tvTextResult.text = SpannableString(tvTextResult.text.toString())
+        tvMorseCode.text = SpannableString(tvMorseCode.text.toString())
     }
 
     override fun onTotalProgressChanged(progress: Float) {
     }
 
     override fun onMorseCharacterChanged(letterIndex: Int) {
-        if (letterIndex < tvTextResult.text.length) {
-            val span = SpannableString(tvTextResult.text.toString())
+        if (letterIndex < tvMorseCode.text.length) {
+            val span = SpannableString(tvMorseCode.text.toString())
             span.setSpan(BackgroundColorSpan(Color.GREEN), letterIndex, letterIndex + 1, 0)
-            tvTextResult.text = span
+            tvMorseCode.text = span
         }
     }
     //endregion

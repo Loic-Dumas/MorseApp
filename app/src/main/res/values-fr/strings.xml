@@ -11,4 +11,6 @@
     <string name="swap_mode">Changer de mode</string>
     <string name="play">Lancer</string>
     <string name="stop">Arrêter</string>
+    <string name="text">Texte</string>
+    <string name="morse">Morse</string>
 </resources>
