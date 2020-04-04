@@ -3,15 +3,12 @@ package com.loic.morseapp
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.text.Editable
-import android.text.SpannableString
 import android.text.TextWatcher
-import android.text.style.BackgroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
@@ -38,10 +35,12 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     }
 
     private val _morsePlayer = MorsePlayer()
-    private var _alphaTextToMorse = true
     private val _morseFlashPlayer: MorseFlashLightPlayerInterface by lazy { getCameraController() }
     private val _morseSoundPlayer: MorseSoundPlayer by lazy { MorseSoundPlayer(this) }
     private val _morseVibrationPlayer: MorseVibrationPlayer by lazy { MorseVibrationPlayer(this) }
+
+    private var _alphaEditTextHasFocus = false
+    private var _morseEditTextHasFocus = false
 
     private var _menu: Menu? = null
     private lateinit var _flashStatus: Status
@@ -91,12 +90,13 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         //endregion
 
         //region Set the view (button, ...)
-        setButtonText()
-
-        etAlphaTextToTranslate.addTextChangedListener(onTextToTranslateChanged)
+        etAlphaTextToTranslate.addTextChangedListener(onAlphaToTranslateChanged)
+        etAlphaTextToTranslate.setOnFocusChangeListener { _, hasFocus -> _alphaEditTextHasFocus = hasFocus }
+        etMorseCodeToTranslate.addTextChangedListener(onMorseToTranslateChanged)
+        etMorseCodeToTranslate.setOnFocusChangeListener { _, hasFocus -> _morseEditTextHasFocus = hasFocus }
 
         btPlay.setOnClickListener {
-            _morsePlayer.play(tvMorseCode.text.toString())
+            _morsePlayer.play(etMorseCodeToTranslate.text.toString())
             if (currentFocus != null) {
                 val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
                 inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
@@ -125,40 +125,42 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         _morsePlayer.removeAllMorseOutputPlayer()
     }
 
-    private fun setButtonText() {
-        if (_alphaTextToMorse) {
-            supportActionBar?.title = getString(R.string.letters_to_morse)
-        } else {
-            supportActionBar?.title = getString(R.string.morse_to_letters)
-        }
-    }
-
     /**
-     * TextWatcher used to translate the written text into morse or alpha every time the text imput
-     * is updated.
+     * TextWatcher used to translate the written alpha text into morse time the text change.
      */
-    private val onTextToTranslateChanged = object : TextWatcher {
+    private val onAlphaToTranslateChanged = object : TextWatcher {
         override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            _morsePlayer.stop()
-            convertText(sequence.toString())
+            if (_alphaEditTextHasFocus) {
+                _morsePlayer.stop()
+
+                etMorseCodeToTranslate.setText(MorseConverter.convertAlphaToMorse(sequence.toString()))
+            }
         }
 
         override fun afterTextChanged(p0: Editable?) {}
         override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
     }
 
-    private fun convertText(text: String) {
-        if (_alphaTextToMorse) {
-            tvMorseCode.text = MorseConverter.convertAlphaToMorse(text)
-        } else {
-            try {
-                tvMorseCode.text = MorseConverter.convertMorseToAlpha(text)
-            } catch (e: UnexpectedCharacterException) {
-                SingleToast.showShortToast(this, "${e.char} is forbidden, only - . and spaces are allowed.")
-            } catch (e: UnknownMorseCharacterException) {
-                SingleToast.showShortToast(this, "Impossible to recognize this Character : ${e.morseChar}")
+    /**
+     * TextWatcher used to translate the written morse code into alpha text time the text change.
+     */
+    private val onMorseToTranslateChanged = object : TextWatcher {
+        override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            if (_morseEditTextHasFocus) {
+                _morsePlayer.stop()
+
+                try {
+                    etAlphaTextToTranslate.setText(MorseConverter.convertMorseToAlpha(sequence.toString()))
+                } catch (e: UnexpectedCharacterException) {
+                    SingleToast.showShortToast(this@MainActivity, "${e.char} is forbidden, only - . and spaces are allowed.")
+                } catch (e: UnknownMorseCharacterException) {
+                    SingleToast.showShortToast(this@MainActivity, "Impossible to recognize this Character : ${e.morseChar}")
+                }
             }
         }
+
+        override fun afterTextChanged(p0: Editable?) {}
+        override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
     }
 
     //region Toolbar menu
@@ -336,20 +338,20 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     }
 
     override fun onPlayerFinished() {
-        tvMorseCode.text = tvMorseCode.text.toString()
-
-        tvMorseCode.text = SpannableString(tvMorseCode.text.toString())
+//        tvMorseCode.text = tvMorseCode.text.toString()
+//
+//        tvMorseCode.text = SpannableString(tvMorseCode.text.toString())
     }
 
     override fun onTotalProgressChanged(progress: Float) {
     }
 
     override fun onMorseCharacterChanged(letterIndex: Int) {
-        if (letterIndex < tvMorseCode.text.length) {
-            val span = SpannableString(tvMorseCode.text.toString())
-            span.setSpan(BackgroundColorSpan(Color.GREEN), letterIndex, letterIndex + 1, 0)
-            tvMorseCode.text = span
-        }
+//        if (letterIndex < tvMorseCode.text.length) {
+//            val span = SpannableString(tvMorseCode.text.toString())
+//            span.setSpan(BackgroundColorSpan(Color.GREEN), letterIndex, letterIndex + 1, 0)
+//            tvMorseCode.text = span
+//        }
     }
     //endregion
 
