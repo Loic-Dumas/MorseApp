@@ -4,6 +4,7 @@
     <string name="morse_to_letters">Morse -> Texte</string>
     <string name="letters_to_morse">Texte -> morse</string>
     <string name="enter_a_text">Entrez un texte à traduire en code morse</string>
+    <string name="enter_morse">Entrer le code morse à traduire en texte</string>
     <string name="flash_light">Lumière</string>
     <string name="sound">Son</string>
     <string name="vibration">Vibration</string>
@@ -13,5 +14,4 @@
     <string name="stop">Arrêter</string>
     <string name="text">Texte</string>
     <string name="morse">Morse</string>
-    <string name="enter_morse">Entrer le code morse à traduire en texte</string>
 </resources>

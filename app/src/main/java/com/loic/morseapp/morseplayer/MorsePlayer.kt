@@ -17,6 +17,8 @@ class MorsePlayer {
     private val _morseOutputPlayers = ArrayList<MorseOutputPlayer>()
     private var _timer: CountDownTimer? = null
 
+    var isPlaying = false
+
     fun addMorseOutputPlayer(player: MorseOutputPlayer) {
         if (!_morseOutputPlayers.contains(player)) {
             player.onPlayerAdded()
@@ -48,6 +50,7 @@ class MorsePlayer {
         val morseSignal = transformToMorseSignal(morseCode)
         Log.d("DEBUG", morseSignal.toString())
 
+        isPlaying = true
         notifyPlayerStarted()
 
         var indexSignal = 0
@@ -55,6 +58,7 @@ class MorsePlayer {
         var previousState = false
         _timer = object : CountDownTimer((morseSignal.size) * TIME_LENGTH, TIME_LENGTH) {
             override fun onFinish() {
+                isPlaying = false
                 notifyPlayerFinished()
             }
 
@@ -94,6 +98,7 @@ class MorsePlayer {
      */
     fun stop() {
         _timer?.cancel()
+        isPlaying = false
         switchOffOutputs()
         notifyPlayerFinished()
     }

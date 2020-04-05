@@ -95,17 +95,18 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         etMorseCodeToTranslate.addTextChangedListener(onMorseToTranslateChanged)
         etMorseCodeToTranslate.setOnFocusChangeListener { _, hasFocus -> _morseEditTextHasFocus = hasFocus }
 
-        btPlay.setOnClickListener {
-            _morsePlayer.play(etMorseCodeToTranslate.text.toString())
-            if (currentFocus != null) {
-                val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        btPlayStop.setOnClickListener {
+            if (_morsePlayer.isPlaying) {
+                _morsePlayer.stop()
+            } else {
+                _morsePlayer.play(etMorseCodeToTranslate.text.toString())
+                if (currentFocus != null) {
+                    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+                }
             }
         }
 
-        btStop.setOnClickListener {
-            _morsePlayer.stop()
-        }
         //endregion
     }
 
@@ -335,9 +336,14 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     }
 
     override fun onPlayerStarted() {
+        btPlayStop.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_stop_black_24dp))
+        btPlayStop.contentDescription = resources.getString(R.string.stop)
     }
 
     override fun onPlayerFinished() {
+        btPlayStop.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_black_24dp))
+        btPlayStop.contentDescription = resources.getString(R.string.play)
+
 //        tvMorseCode.text = tvMorseCode.text.toString()
 //
 //        tvMorseCode.text = SpannableString(tvMorseCode.text.toString())

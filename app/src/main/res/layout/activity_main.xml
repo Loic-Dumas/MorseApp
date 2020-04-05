@@ -96,43 +96,29 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginEnd="8dp"
+                        android:layout_marginBottom="8dp"
                         android:background="@null"
                         android:ems="10"
                         android:gravity="top|start"
                         android:hint="@string/enter_a_text"
                         android:importantForAutofill="no"
                         android:inputType="textMultiLine"
+                        app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@+id/tvMorseTitle" />
 
-                    <Button
-                        android:id="@+id/btPlay"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ImageView
+                        android:id="@+id/btPlayStop"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginEnd="8dp"
                         android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@android:color/holo_green_light"
-                        android:text="@string/play"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toStartOf="@+id/btStop"
-                        app:layout_constraintTop_toBottomOf="@+id/etMorseCodeToTranslate" />
-
-                    <Button
-                        android:id="@+id/btStop"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_marginRight="8dp"
-                        android:layout_marginBottom="8dp"
-                        android:background="@android:color/holo_red_light"
-                        android:text="@string/stop"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:contentDescription="@string/play"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/etMorseCodeToTranslate" />
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:srcCompat="@drawable/ic_play_arrow_black_24dp" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
