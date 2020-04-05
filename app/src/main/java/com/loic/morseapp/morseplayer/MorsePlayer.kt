@@ -59,7 +59,7 @@ class MorsePlayer {
         _timer = object : CountDownTimer((morseSignal.size) * TIME_LENGTH, TIME_LENGTH) {
             override fun onFinish() {
                 isPlaying = false
-                notifyPlayerFinished()
+                notifyPlayerFinished(true)
             }
 
             override fun onTick(millisUntilFinished: Long) {
@@ -100,7 +100,7 @@ class MorsePlayer {
         _timer?.cancel()
         isPlaying = false
         switchOffOutputs()
-        notifyPlayerFinished()
+        notifyPlayerFinished(false)
     }
 
     /**
@@ -151,8 +151,8 @@ class MorsePlayer {
         _morseOutputPlayers.forEach { it.onPlayerStarted() }
     }
 
-    private fun notifyPlayerFinished() {
-        _morseOutputPlayers.forEach { it.onPlayerFinished() }
+    private fun notifyPlayerFinished(morseCodeFullyPlayed: Boolean) {
+        _morseOutputPlayers.forEach { it.onPlayerFinished(morseCodeFullyPlayed) }
     }
 
     /**
@@ -173,7 +173,12 @@ class MorsePlayer {
         fun switchOn()
         fun switchOff()
         fun onPlayerStarted()
-        fun onPlayerFinished()
+
+        /**
+         * @param morseCodeFullyPlayed true if the morse sequence have been played until the end,
+         * false if the player have been stop.
+         */
+        fun onPlayerFinished(morseCodeFullyPlayed: Boolean)
         fun onTotalProgressChanged(progress: Float)
         fun onMorseCharacterChanged(letterIndex: Int)
     }

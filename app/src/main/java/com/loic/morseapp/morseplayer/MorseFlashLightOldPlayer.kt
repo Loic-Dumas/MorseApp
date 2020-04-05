@@ -91,7 +91,7 @@ class MorseFlashLightOldPlayer : MorseFlashLightPlayerInterface {
 
     override fun onPlayerStarted() {}
 
-    override fun onPlayerFinished() {}
+    override fun onPlayerFinished(morseCodeFullyPlayed: Boolean) {}
 
     override fun onTotalProgressChanged(progress: Float) {}
 

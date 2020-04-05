@@ -42,7 +42,7 @@ class MorseSoundPlayer(context: Context) : MorsePlayer.MorseOutputPlayer {
     override fun onPlayerStarted() {
     }
 
-    override fun onPlayerFinished() {
+    override fun onPlayerFinished(morseCodeFullyPlayed: Boolean) {
         switchOff()
     }
 

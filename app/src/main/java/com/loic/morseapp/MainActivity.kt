@@ -32,6 +32,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         private const val SHARED_PREF_FLASHLIGHT = "pref_flashlight"
         private const val SHARED_PREF_SOUND = "pref_sound"
         private const val SHARED_PREF_VIBRATION = "pref_vibration"
+        private const val SHARED_PREF_REPEAT_MODE_ACTIVATED = "repeat_mode_activated"
     }
 
     private val _morsePlayer = MorsePlayer()
@@ -46,6 +47,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     private lateinit var _flashStatus: Status
     private lateinit var _soundStatus: Status
     private lateinit var _vibrationStatus: Status
+    private var _isRepeatMode = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -57,6 +59,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         _flashStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_FLASHLIGHT, Status.ON.toString()))
         _soundStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_SOUND, Status.ON.toString()))
         _vibrationStatus = Status.fromString(sharedPreferences.getString(SHARED_PREF_VIBRATION, Status.ON.toString()))
+        _isRepeatMode = sharedPreferences.getBoolean(SHARED_PREF_REPEAT_MODE_ACTIVATED, false)
 
         //region Init player by adding output players
         _morsePlayer.addMorseOutputPlayer(this)
@@ -107,6 +110,11 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
             }
         }
 
+        btRepeatMode.setOnClickListener {
+            _isRepeatMode = !_isRepeatMode
+            setRepeatModeImage()
+        }
+        setRepeatModeImage()
         //endregion
     }
 
@@ -118,6 +126,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
                 .putString(SHARED_PREF_FLASHLIGHT, _flashStatus.toString())
                 .putString(SHARED_PREF_SOUND, _soundStatus.toString())
                 .putString(SHARED_PREF_VIBRATION, _vibrationStatus.toString())
+                .putBoolean(SHARED_PREF_REPEAT_MODE_ACTIVATED, _isRepeatMode)
                 .apply()
     }
 
@@ -322,13 +331,21 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         }
     }
 
+    private fun setRepeatModeImage() {
+        if (_isRepeatMode) {
+            btRepeatMode.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_repeat_black_24dp))
+        } else {
+            btRepeatMode.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_repeat_grey_24dp))
+        }
+    }
+
+    //region MorsePlayerListenerInterface implementation
     override fun onPlayerAdded() {
     }
 
     override fun onPlayerRemoved() {
     }
 
-    //region MorsePlayerListenerInterface implementation
     override fun switchOn() {
     }
 
@@ -340,9 +357,13 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         btPlayStop.contentDescription = resources.getString(R.string.stop)
     }
 
-    override fun onPlayerFinished() {
+    override fun onPlayerFinished(morseCodeFullyPlayed: Boolean) {
         btPlayStop.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_black_24dp))
         btPlayStop.contentDescription = resources.getString(R.string.play)
+
+        if (_isRepeatMode && morseCodeFullyPlayed) {
+            _morsePlayer.play(etMorseCodeToTranslate.text.toString())
+        }
 
 //        tvMorseCode.text = tvMorseCode.text.toString()
 //
