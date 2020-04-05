@@ -14,4 +14,7 @@
     <string name="text">Text</string>
     <string name="morse">Morse</string>
     <string name="repeat_mode">Repeat</string>
+    <string name="text_copied">Text copied</string>
+    <string name="morse_copied">Morse copied</string>
+    <string name="nothing_to_copy">Nothing to copy</string>
 </resources>

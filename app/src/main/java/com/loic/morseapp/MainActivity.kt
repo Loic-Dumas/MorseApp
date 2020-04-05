@@ -1,6 +1,8 @@
 package com.loic.morseapp
 
 import android.Manifest
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
 import android.graphics.drawable.Drawable
@@ -42,13 +44,13 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
     private var _alphaEditTextHasFocus = false
     private var _morseEditTextHasFocus = false
+    private val _clipBoardManager: ClipboardManager by lazy { getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager }
 
     private var _menu: Menu? = null
     private lateinit var _flashStatus: Status
     private lateinit var _soundStatus: Status
     private lateinit var _vibrationStatus: Status
     private var _isRepeatMode = false
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,6 +99,31 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         etAlphaTextToTranslate.setOnFocusChangeListener { _, hasFocus -> _alphaEditTextHasFocus = hasFocus }
         etMorseCodeToTranslate.addTextChangedListener(onMorseToTranslateChanged)
         etMorseCodeToTranslate.setOnFocusChangeListener { _, hasFocus -> _morseEditTextHasFocus = hasFocus }
+
+        btClearText.setOnClickListener {
+            etAlphaTextToTranslate.setText("")
+            etMorseCodeToTranslate.setText("")
+            if (_morsePlayer.isPlaying) {
+                _morsePlayer.stop()
+            }
+        }
+
+        btCopyText.setOnClickListener {
+            if (etAlphaTextToTranslate.text.isNotEmpty()) {
+                _clipBoardManager.primaryClip = ClipData.newPlainText(getString(R.string.text), etAlphaTextToTranslate.text.toString());
+                SingleToast.showShortToast(this, getString(R.string.text_copied))
+            } else {
+                SingleToast.showShortToast(this, getString(R.string.nothing_to_copy))
+            }
+        }
+        btCopyMorseCode.setOnClickListener {
+            if (etMorseCodeToTranslate.text.isNotEmpty()) {
+                _clipBoardManager.primaryClip = ClipData.newPlainText(getString(R.string.morse), etMorseCodeToTranslate.text.toString());
+                SingleToast.showShortToast(this, getString(R.string.morse_copied))
+            } else {
+                SingleToast.showShortToast(this, getString(R.string.nothing_to_copy))
+            }
+        }
 
         btPlayStop.setOnClickListener {
             if (_morsePlayer.isPlaying) {

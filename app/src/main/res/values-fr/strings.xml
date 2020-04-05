@@ -15,4 +15,7 @@
     <string name="text">Texte</string>
     <string name="morse">Morse</string>
     <string name="repeat_mode">"En boucle "</string>
+    <string name="text_copied">Text copié</string>
+    <string name="morse_copied">Morse copié</string>
+    <string name="nothing_to_copy">Rien à copier</string>
 </resources>
