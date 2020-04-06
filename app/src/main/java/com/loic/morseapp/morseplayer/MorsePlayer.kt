@@ -119,10 +119,10 @@ class MorsePlayer {
                 '-' -> {
                     morseSignal += listOf(Signal(true, idx), Signal(true, idx), Signal(true, idx))
                 }
-                '.' -> {
+                '·' -> {
                     morseSignal += listOf(Signal(true, idx))
                 }
-                ' ' -> {
+                ' ', '\n' -> {
                     morseSignal += listOf(Signal(false, idx), Signal(false, idx))
                 }
             }

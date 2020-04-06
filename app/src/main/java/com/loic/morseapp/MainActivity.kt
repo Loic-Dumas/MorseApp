@@ -14,6 +14,7 @@ import android.text.TextWatcher
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -96,9 +97,16 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
         //region Set the view (button, ...)
         etAlphaTextToTranslate.addTextChangedListener(onAlphaToTranslateChanged)
-        etAlphaTextToTranslate.setOnFocusChangeListener { _, hasFocus -> _alphaEditTextHasFocus = hasFocus }
+        etAlphaTextToTranslate.setOnFocusChangeListener { _, hasFocus ->
+            _alphaEditTextHasFocus = hasFocus
+            if (!hasFocus) {
+                hideKeyboard()
+            }
+        }
         etMorseCodeToTranslate.addTextChangedListener(onMorseToTranslateChanged)
         etMorseCodeToTranslate.setOnFocusChangeListener { _, hasFocus -> _morseEditTextHasFocus = hasFocus }
+        // todo Hide the keyboard when etMorseCodeToTranslate is clicked
+        etMorseCodeToTranslate.setOnTouchListener { _, _ -> etMorseCodeToTranslate.requestFocus(); hideKeyboard(); true }
 
         btClearText.setOnClickListener {
             etAlphaTextToTranslate.setText("")
@@ -130,10 +138,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
                 _morsePlayer.stop()
             } else {
                 _morsePlayer.play(etMorseCodeToTranslate.text.toString())
-                if (currentFocus != null) {
-                    val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-                    inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
-                }
+                hideKeyboard()
             }
         }
 
@@ -142,7 +147,29 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
             setRepeatModeImage()
         }
         setRepeatModeImage()
+
+        // morse keyboard
+        btMorseKeyboardTi.setOnClickListener {
+            etMorseCodeToTranslate.insertAtCurrentSelection(getString(R.string.ti_symbol))
+        }
+
+        btMorseKeyboardTa.setOnClickListener {
+            etMorseCodeToTranslate.insertAtCurrentSelection(getString(R.string.ta_symbol))
+        }
+
+        btMorseKeyboardSpace.setOnClickListener {
+            etMorseCodeToTranslate.insertAtCurrentSelection(" ")
+        }
+
+        btMorseKeyboardReturn.setOnClickListener {
+            etMorseCodeToTranslate.insertAtCurrentSelection("\n")
+        }
+
+        btMorseKeyboardDelete.setOnClickListener {
+            etMorseCodeToTranslate.deleteAtCurrentSelection()
+        }
         //endregion
+
     }
 
     override fun onPause() {
@@ -189,7 +216,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
                 try {
                     etAlphaTextToTranslate.setText(MorseConverter.convertMorseToAlpha(sequence.toString()))
                 } catch (e: UnexpectedCharacterException) {
-                    SingleToast.showShortToast(this@MainActivity, "${e.char} is forbidden, only - . and spaces are allowed.")
+                    SingleToast.showShortToast(this@MainActivity, "${e.char} is forbidden, only - · return and spaces are allowed.")
                 } catch (e: UnknownMorseCharacterException) {
                     SingleToast.showShortToast(this@MainActivity, "Impossible to recognize this Character : ${e.morseChar}")
                 }
@@ -363,6 +390,40 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
             btRepeatMode.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_repeat_black_24dp))
         } else {
             btRepeatMode.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_repeat_grey_24dp))
+        }
+    }
+
+    private fun hideKeyboard() {
+        if (currentFocus != null) {
+            val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
+        }
+    }
+
+    /**
+     * @param string to insert at the current cursor position.
+     * Request the focus for the editText and set the cursor at the new right position.
+     */
+    private fun EditText.insertAtCurrentSelection(string: String) {
+        requestFocus()
+        hideKeyboard()
+        val currentSelection = selectionStart
+        val newText = text.insert(selectionStart, string)
+        text = newText
+        setSelection(currentSelection + string.length)
+    }
+
+    /**
+     * Request the focus and delete the character before the cursor, if any.
+     */
+    private fun EditText.deleteAtCurrentSelection() {
+        requestFocus()
+        hideKeyboard()
+        if (selectionStart > 0) {
+            val currentSelection = selectionStart
+            val newText = text.removeRange(selectionStart - 1, selectionStart)
+            setText(newText)
+            setSelection(currentSelection - 1)
         }
     }
 

@@ -18,4 +18,9 @@
     <string name="text_copied">Text copié</string>
     <string name="morse_copied">Morse copié</string>
     <string name="nothing_to_copy">Rien à copier</string>
+    <string name="short_morse_symbol">Symbole morse court</string>
+    <string name="long_morse_symbol">Symbole morse long</string>
+    <string name="space">espace</string>
+    <string name="delete">supprimer</string>
+    <string name="keyboard_return">retour à la ligne</string>
 </resources>
