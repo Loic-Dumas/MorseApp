@@ -45,7 +45,9 @@ class MorsePlayer {
         // mechanism : the morseCode string is transformed into an array of boolean
         // Then a CountDownTimer is used to be called back on every tick (every TIME_LENGTH)
 
-        stop()
+        if (isPlaying) {
+            stop()
+        }
 
         val morseSignal = transformToMorseSignal(morseCode)
         Log.d("DEBUG", morseSignal.toString())
@@ -85,9 +87,6 @@ class MorsePlayer {
                     Log.d("DEBUG", "Display signal $indexSignal: $currentSignal")
 
                     indexSignal++
-                } else {
-                    Log.e("Error", "The CharSequence is over")
-                    this.cancel()
                 }
             }
         }.start()
