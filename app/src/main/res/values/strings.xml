@@ -5,7 +5,7 @@
     <string name="morse_to_letters">Morse -> Letters</string>
     <string name="letters_to_morse">Letters -> Morse</string>
     <string name="enter_a_text">Enter a text to translate in morse</string>
-    <string name="enter_morse">Enter a morse code to translate in text</string>
+    <string name="enter_morse">Enter a morse sequence to translate in text</string>
     <string name="flash_light">Flash Light</string>
     <string name="sound">Sound</string>
     <string name="vibration">Vibration</string>
@@ -24,4 +24,10 @@
     <string name="space">space</string>
     <string name="delete">delete</string>
     <string name="keyboard_return">return</string>
+    <string name="play_stop_the_sequence">Play or stop the sequence</string>
+    <string name="paste_text">Paste text</string>
+    <string name="copy_morse_code">Copy morse sequence</string>
+    <string name="delete_all_text">Delete text</string>
+    <string name="copy_text">Copy Text</string>
+    <string name="nothing_to_paste">Nothing to paste</string>
 </resources>

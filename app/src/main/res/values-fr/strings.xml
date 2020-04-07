@@ -3,8 +3,8 @@
     <string name="app_name">1 Morse App FR</string>
     <string name="morse_to_letters">Morse -> Texte</string>
     <string name="letters_to_morse">Texte -> morse</string>
-    <string name="enter_a_text">Entrez un texte à traduire en code morse</string>
-    <string name="enter_morse">Entrer le code morse à traduire en texte</string>
+    <string name="enter_a_text">Entrez un texte à traduire en morse</string>
+    <string name="enter_morse">Entrer la séquence de morse à traduire en texte</string>
     <string name="flash_light">Lumière</string>
     <string name="sound">Son</string>
     <string name="vibration">Vibration</string>
@@ -23,4 +23,10 @@
     <string name="space">espace</string>
     <string name="delete">supprimer</string>
     <string name="keyboard_return">retour à la ligne</string>
+    <string name="play_stop_the_sequence">Jouer ou arrêter la séquence de morse</string>
+    <string name="paste_text">Coller le texte</string>
+    <string name="copy_morse_code">Copier la séquence de morse</string>
+    <string name="delete_all_text">Supprimer le texte</string>
+    <string name="copy_text">Copier le texte</string>
+    <string name="nothing_to_paste">Rien à copier</string>
 </resources>
