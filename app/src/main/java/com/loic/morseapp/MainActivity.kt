@@ -112,11 +112,9 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         etMorseCodeToTranslate.setOnTouchListener { _, _ -> etMorseCodeToTranslate.requestFocus(); hideKeyboard(); true }
 
         btClearText.setOnClickListener {
+            _morsePlayer.stop()
             etAlphaTextToTranslate.setText("")
             etMorseCodeToTranslate.setText("")
-            if (_morsePlayer.isPlaying) {
-                _morsePlayer.stop()
-            }
         }
 
         btCopyText.setOnClickListener {
@@ -147,8 +145,10 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
             if (_morsePlayer.isPlaying) {
                 _morsePlayer.stop()
             } else {
-                _morsePlayer.play(etMorseCodeToTranslate.text.toString())
+                etAlphaTextToTranslate.clearFocus()
+                etMorseCodeToTranslate.clearFocus()
                 hideKeyboard()
+                _morsePlayer.play(etMorseCodeToTranslate.text.toString())
             }
         }
 
@@ -205,8 +205,9 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     private val onAlphaToTranslateChanged = object : TextWatcher {
         override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (_alphaEditTextHasFocus) {
-                _morsePlayer.stop()
-
+                if (_morsePlayer.isPlaying) {
+                    _morsePlayer.stop()
+                }
                 etMorseCodeToTranslate.setText(MorseConverter.convertAlphaToMorse(sequence.toString()))
             }
         }
@@ -221,7 +222,9 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     private val onMorseToTranslateChanged = object : TextWatcher {
         override fun onTextChanged(sequence: CharSequence?, p1: Int, p2: Int, p3: Int) {
             if (_morseEditTextHasFocus) {
-                _morsePlayer.stop()
+                if (_morsePlayer.isPlaying) {
+                    _morsePlayer.stop()
+                }
 
                 try {
                     etAlphaTextToTranslate.setText(MorseConverter.convertMorseToAlpha(sequence.toString()))
@@ -417,10 +420,17 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     private fun EditText.insertAtCurrentSelection(string: String) {
         requestFocus()
         hideKeyboard()
-        val currentSelection = selectionStart
-        val newText = text.insert(selectionStart, string)
-        text = newText
-        setSelection(currentSelection + string.length)
+
+        //region temporary fix while keyboard cannot be hidden when click on edit text...
+//        val currentSelection = selectionStart
+//        val newText = text.insert(selectionStart, string)
+//        text = newText
+//        setSelection(currentSelection + string.length)
+        // fix :
+        val newText = text.append(string)
+        this.setText(newText.toString()) // need to cast it in String to refresh span, if we was playing
+        this.setSelection(text.length)
+        // endregion tmp fix
     }
 
     /**
@@ -429,12 +439,19 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     private fun EditText.deleteAtCurrentSelection() {
         requestFocus()
         hideKeyboard()
-        if (selectionStart > 0) {
-            val currentSelection = selectionStart
-            val newText = text.removeRange(selectionStart - 1, selectionStart)
-            setText(newText)
-            setSelection(currentSelection - 1)
-        }
+
+        //region temporary fix while keyboard cannot be hidden when click on edit text...
+//        if (selectionStart > 0) {
+//            val currentSelection = selectionStart
+//            val newText = text.removeRange(selectionStart - 1, selectionStart)
+//            setText(newText)
+//            setSelection(currentSelection - 1)
+//        }
+        // fix :
+        val newText = text.removeRange(text.length - 1, text.length)
+        this.setText(newText)
+        this.setSelection(text.length)
+        //endRegion tmp fix
     }
 
     //region MorsePlayerListenerInterface implementation
@@ -459,11 +476,12 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         btPlayStop.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_play_arrow_black_24dp))
         btPlayStop.contentDescription = resources.getString(R.string.play)
 
+        // reset text
+        etMorseCodeToTranslate.setText(etMorseCodeToTranslate.text.toString())
+
         if (_isRepeatMode && morseCodeFullyPlayed) {
             _morsePlayer.play(etMorseCodeToTranslate.text.toString())
         }
-
-        etMorseCodeToTranslate.setText(etMorseCodeToTranslate.text.toString())
     }
 
     override fun onTotalProgressChanged(progress: Float) {
