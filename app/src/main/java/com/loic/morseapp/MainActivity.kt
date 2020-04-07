@@ -5,12 +5,15 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
+import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Vibrator
 import android.text.Editable
+import android.text.SpannableString
 import android.text.TextWatcher
+import android.text.style.BackgroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
@@ -460,20 +463,18 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
             _morsePlayer.play(etMorseCodeToTranslate.text.toString())
         }
 
-//        tvMorseCode.text = tvMorseCode.text.toString()
-//
-//        tvMorseCode.text = SpannableString(tvMorseCode.text.toString())
+        etMorseCodeToTranslate.setText(etMorseCodeToTranslate.text.toString())
     }
 
     override fun onTotalProgressChanged(progress: Float) {
     }
 
     override fun onMorseCharacterChanged(letterIndex: Int) {
-//        if (letterIndex < tvMorseCode.text.length) {
-//            val span = SpannableString(tvMorseCode.text.toString())
-//            span.setSpan(BackgroundColorSpan(Color.GREEN), letterIndex, letterIndex + 1, 0)
-//            tvMorseCode.text = span
-//        }
+        if (letterIndex < etMorseCodeToTranslate.text.length) {
+            val span = SpannableString(etMorseCodeToTranslate.text.toString())
+            span.setSpan(BackgroundColorSpan(Color.GREEN), letterIndex, letterIndex + 1, 0)
+            etMorseCodeToTranslate.setText(span)
+        }
     }
     //endregion
 
