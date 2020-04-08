@@ -136,7 +136,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
         btPasteMorseCode.setOnClickListener {
             _clipBoardManager.primaryClip?.let { clipData ->
-                etMorseCodeToTranslate.insertAtCurrentSelection(clipData.getItemAt(0).text.toString())
+                etMorseCodeToTranslate.insertAtCurrentSelection(clipData.getItemAt(0).text.toString().replace('.', '·', true))
             } ?: SingleToast.showShortToast(this, getString(R.string.nothing_to_paste))
         }
 

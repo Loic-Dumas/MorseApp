@@ -16,7 +16,8 @@ class MorseConverterTest {
         assertEquals("---", MorseConverter.convertAlphaToMorse("o")) // lower case
         assertEquals("·", MorseConverter.convertAlphaToMorse("E")) // upper case
         assertEquals("·-", MorseConverter.convertAlphaToMorse("a"))
-        assertEquals("·-·-·-", MorseConverter.convertAlphaToMorse(".")) // special char
+        assertEquals("·-·-·-", MorseConverter.convertAlphaToMorse(".")) // normal dot
+        assertEquals("·-·-·-", MorseConverter.convertAlphaToMorse("·")) // middle dot used as ti symbol
         assertEquals("-·-··", MorseConverter.convertAlphaToMorse("ç")) // special letter
         assertEquals("--···", MorseConverter.convertAlphaToMorse("7")) // number
         assertEquals("ï", MorseConverter.convertAlphaToMorse("ï")) // unknown char
@@ -41,6 +42,7 @@ class MorseConverterTest {
         assertEquals("e", MorseConverter.convertMorseToAlpha("·")) // letter
         assertEquals("e", MorseConverter.convertMorseToAlpha("· ")) // letter + space
         assertEquals("!", MorseConverter.convertMorseToAlpha("-·-·--"))// known special character
+        assertEquals("·", MorseConverter.convertMorseToAlpha("·-·-·-"))// known special character
         assertEquals("9", MorseConverter.convertMorseToAlpha("----·")) // number
         assertEquals("è", MorseConverter.convertMorseToAlpha("·-··-")) // known special letter
 
