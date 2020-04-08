@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">1 Morse App FR</string>
+    <string name="app_name">Morse App</string>
     <string name="morse_to_letters">Morse -> Texte</string>
     <string name="letters_to_morse">Texte -> morse</string>
     <string name="enter_a_text">Entrez un texte à traduire en morse</string>
