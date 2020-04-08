@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#40FF81</color>
+    <color name="colorPrimary">#C84028</color>
+    <color name="colorPrimaryDark">#A12933</color>
+    <color name="colorAccent">#F7A033</color>
 
     <color name="backgroundColor">#97b1b1b1</color>
 
@@ -10,6 +10,8 @@
     <color name="whiteColor">#FFF</color>
     <color name="switchOnColor">#f9cd3c</color>
     <color name="switchOffColor">#FFF</color>
+    <color name="textBackgroundColor">#F9C933</color>
 
     <color name="morse_grey">#33999999</color>
+    <color name="blue_logo">#2999F3</color>
 </resources>

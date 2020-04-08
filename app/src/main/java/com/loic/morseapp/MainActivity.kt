@@ -5,7 +5,6 @@ import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
@@ -490,7 +489,8 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     override fun onMorseCharacterChanged(letterIndex: Int) {
         if (letterIndex < etMorseCodeToTranslate.text.length) {
             val span = SpannableString(etMorseCodeToTranslate.text.toString())
-            span.setSpan(BackgroundColorSpan(Color.GREEN), letterIndex, letterIndex + 1, 0)
+            @Suppress("DEPRECATION")
+            span.setSpan(BackgroundColorSpan(resources.getColor(R.color.textBackgroundColor)), letterIndex, letterIndex + 1, 0)
             etMorseCodeToTranslate.setText(span)
         }
     }
