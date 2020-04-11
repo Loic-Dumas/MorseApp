@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Morse App</string>
+    <string name="app_name">Morse Player</string>
     <string name="ti_symbol" translatable="false">·</string> <!-- to do this dot on mac : ⌥ Opt + Shift + F or see https://en.wikipedia.org/wiki/Interpunct#Keyboard_input-->
     <string name="ta_symbol" translatable="false">-</string>
     <string name="morse_to_letters">Morse -> Letters</string>

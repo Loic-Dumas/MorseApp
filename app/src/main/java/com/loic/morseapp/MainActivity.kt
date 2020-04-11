@@ -58,6 +58,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        title = getString(R.string.morse)
 
         // init status of each possible output, based of previous saved status in shared preferences
         val sharedPreferences = baseContext.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
