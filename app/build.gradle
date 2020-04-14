@@ -43,6 +43,19 @@ android {
             debuggable true
         }
     }
+
+    bundle {
+        density {
+            enableSplit true
+        }
+        abi {
+            enableSplit true
+        }
+        language {
+            enableSplit false
+        }
+    }
+
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
     }
