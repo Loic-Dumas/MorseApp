@@ -3,6 +3,8 @@
 This application allow the user to write a text, and translate it in morse code.
 The morse code is written with dots and dashes, and can be played with the flash light, vibrations and sound.
 
+[Get on play store.](https://play.google.com/store/apps/details?id=com.loic.morseapp)
+
 ![Screen shot](readme-images/screen-en-small.png)
 
 # Set up :
