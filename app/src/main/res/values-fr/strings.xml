@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Morse Player</string>
-    <string name="morse_to_letters">Morse -> Texte</string>
-    <string name="letters_to_morse">Texte -> morse</string>
     <string name="enter_a_text">Entrez un texte à traduire en morse</string>
     <string name="enter_morse">Entrer la séquence de morse à traduire en texte</string>
     <string name="flash_light">Lumière</string>
@@ -29,4 +27,9 @@
     <string name="delete_all_text">Supprimer le texte</string>
     <string name="copy_text">Copier le texte</string>
     <string name="nothing_to_paste">Rien à copier</string>
+    <string name="settings">Paramètres</string>
+    <string name="navigation_drawer_open">Ouvrir le menu</string>
+    <string name="navigation_drawer_close">Fermer le menu</string>
+    <string name="translate">Traduire</string>
+    <string name="image_logo">Image logo</string>
 </resources>
