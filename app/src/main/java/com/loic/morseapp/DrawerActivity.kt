@@ -2,7 +2,6 @@ package com.loic.morseapp
 
 import android.content.res.Configuration
 import android.os.Bundle
-import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -15,6 +14,8 @@ import kotlinx.android.synthetic.main.drawer_app_bar.*
 
 /**
  * This activity manage different views (fragments) of this app with a drawer navigation.
+ * Initiate the drawer menu.
+ * Handle, create and add fragments of different views of the app.
  */
 class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
@@ -23,6 +24,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_drawer)
+        title = ""
 
         // Add navigation drawer
         setSupportActionBar(drawer_toolbar)
@@ -67,16 +69,10 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
         return true
     }
 
-    override fun onCreateOptionsMenu(menu: Menu): Boolean {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        // Todo menuInflater.inflate(R.menu.output_menu, menu)
-        return true
-    }
-
     /**
      * @param fragment Replace current fragment by this fragment.
      */
-    private fun replaceFragment(fragment: Fragment, fragmentName : String? = null) {
+    private fun replaceFragment(fragment: Fragment, fragmentName: String? = null) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.drawer_fragment_container, fragment, fragmentName)
                 .commit()
@@ -85,7 +81,7 @@ class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelec
     /**
      * @param fragment add this fragment on top of the current one.
      */
-    private fun addFragment(fragment: Fragment, fragmentName : String? = null) {
+    private fun addFragment(fragment: Fragment, fragmentName: String? = null) {
         supportFragmentManager.beginTransaction()
                 .replace(R.id.drawer_fragment_container, fragment, fragmentName)
                 .addToBackStack(null)

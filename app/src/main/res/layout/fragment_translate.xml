@@ -1,34 +1,261 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.loic.morseapp.ui.translate.TranslateFragment">
+    android:focusable="true"
+    android:focusableInTouchMode="true">
 
-    <TextView
-        android:id="@+id/text_home"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:gravity="center_horizontal"
-        android:text="Fragment Translate \n Todo"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.120000005" />
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/editText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/text_home" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context="com.loic.morseapp.MainActivity">
+
+                <TextView
+                    android:id="@+id/tvTextTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/text"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/etAlphaTextToTranslate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="16dp"
+                    android:background="@null"
+                    android:gravity="top|start"
+                    android:hint="@string/enter_a_text"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine|textCapSentences"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTextTitle" />
+
+                <ImageView
+                    android:id="@+id/btClearText"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/delete_all_text"
+                    android:tooltipText="@string/delete_all_text"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_cancel_black_24dp"
+                    tools:ignore="UnusedAttribute" />
+
+                <ImageView
+                    android:id="@+id/btCopyText"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/copy_text"
+                    android:tooltipText="@string/copy_text"
+                    app:layout_constraintEnd_toStartOf="@+id/btClearText"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_content_copy_black_24dp"
+                    tools:ignore="UnusedAttribute" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            app:cardBackgroundColor="#FFFFFF">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                tools:context="com.loic.morseapp.MainActivity">
+
+                <TextView
+                    android:id="@+id/tvMorseTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/morse"
+                    android:textColorHighlight="#FFFFFF"
+                    android:textColorLink="#3F51B5"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/etMorseCodeToTranslate"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@null"
+                    android:gravity="top|start"
+                    android:hint="@string/enter_morse"
+                    android:importantForAutofill="no"
+                    android:inputType="textMultiLine"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvMorseTitle" />
+
+                <ImageView
+                    android:id="@+id/btPlayStop"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/play"
+                    android:tooltipText="@string/play_stop_the_sequence"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_play_arrow_black_24dp"
+                    tools:ignore="UnusedAttribute" />
+
+                <ImageView
+                    android:id="@+id/btRepeatMode"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/repeat_mode"
+                    android:tooltipText="@string/repeat_mode"
+                    app:layout_constraintEnd_toStartOf="@+id/btPlayStop"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_repeat_grey_24dp"
+                    tools:ignore="UnusedAttribute" />
+
+                <ImageView
+                    android:id="@+id/btPasteMorseCode"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/paste_text"
+                    android:tooltipText="@string/paste_text"
+                    app:layout_constraintEnd_toStartOf="@+id/btRepeatMode"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_content_paste_black_24dp"
+                    tools:ignore="UnusedAttribute" />
+
+                <ImageView
+                    android:id="@+id/btCopyMorseCode"
+                    android:layout_width="@dimen/icon_size"
+                    android:layout_height="@dimen/icon_size"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/copy_morse_code"
+                    android:tooltipText="@string/copy_morse_code"
+                    app:layout_constraintEnd_toStartOf="@+id/btPasteMorseCode"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_content_copy_black_24dp"
+                    tools:ignore="UnusedAttribute" />
+
+                <ImageButton
+                    android:id="@+id/btMorseKeyboardTi"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/short_morse_symbol"
+                    android:text="@string/ti_symbol"
+                    app:layout_constraintBottom_toBottomOf="@+id/btMorseKeyboardSpace"
+                    app:layout_constraintEnd_toStartOf="@+id/btMorseKeyboardTa"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/btMorseKeyboardSpace"
+                    app:srcCompat="@drawable/ic_dot_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/btMorseKeyboardTa"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/long_morse_symbol"
+                    android:text="@string/ta_symbol"
+                    app:layout_constraintBottom_toBottomOf="@+id/btMorseKeyboardSpace"
+                    app:layout_constraintEnd_toStartOf="@+id/btMorseKeyboardSpace"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btMorseKeyboardTi"
+                    app:layout_constraintTop_toTopOf="@+id/btMorseKeyboardSpace"
+                    app:srcCompat="@drawable/ic_dash_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/btMorseKeyboardSpace"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:contentDescription="@string/space"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/btMorseKeyboardDelete"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btMorseKeyboardTa"
+                    app:layout_constraintTop_toBottomOf="@+id/etMorseCodeToTranslate"
+                    app:srcCompat="@drawable/ic_space_bar_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/btMorseKeyboardDelete"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:contentDescription="@string/delete"
+                    app:layout_constraintBottom_toBottomOf="@+id/btMorseKeyboardSpace"
+                    app:layout_constraintEnd_toStartOf="@+id/btMorseKeyboardReturn"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btMorseKeyboardSpace"
+                    app:layout_constraintTop_toTopOf="@+id/btMorseKeyboardSpace"
+                    app:srcCompat="@drawable/ic_keyboard_backspace_black_24dp" />
+
+                <ImageButton
+                    android:id="@+id/btMorseKeyboardReturn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginRight="8dp"
+                    android:contentDescription="@string/keyboard_return"
+                    app:layout_constraintBottom_toBottomOf="@+id/btMorseKeyboardSpace"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btMorseKeyboardDelete"
+                    app:layout_constraintTop_toTopOf="@+id/btMorseKeyboardSpace"
+                    app:srcCompat="@drawable/ic_keyboard_return_black_24dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+    </LinearLayout>
+</ScrollView>

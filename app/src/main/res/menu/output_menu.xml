@@ -6,18 +6,15 @@
         android:id="@+id/action_flash_light"
         android:title="@string/flash_light"
         app:showAsAction="always"
-        android:icon="@drawable/ic_flashlight_on"
-        />
+        android:icon="@drawable/ic_flashlight_on" />
     <item
         android:id="@+id/action_sound"
         android:title="@string/sound"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_sound_on"
-        />
+        android:icon="@drawable/ic_sound_on" />
     <item
         android:id="@+id/action_vibration"
         android:title="@string/vibration"
         app:showAsAction="ifRoom"
-        android:icon="@drawable/ic_vibration_on"
-        />
+        android:icon="@drawable/ic_vibration_on" />
 </menu>
