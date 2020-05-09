@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.navigation.NavigationView
 import com.loic.morseapp.ui.settings.SettingsFragment
 import com.loic.morseapp.ui.translate.TranslateFragment
-import kotlinx.android.synthetic.main.activity_drawer.*
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.drawer_app_bar.*
 
 /**
@@ -17,13 +17,13 @@ import kotlinx.android.synthetic.main.drawer_app_bar.*
  * Initiate the drawer menu.
  * Handle, create and add fragments of different views of the app.
  */
-class DrawerActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var toggle: ActionBarDrawerToggle
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_drawer)
+        setContentView(R.layout.activity_main)
         title = ""
 
         // Add navigation drawer

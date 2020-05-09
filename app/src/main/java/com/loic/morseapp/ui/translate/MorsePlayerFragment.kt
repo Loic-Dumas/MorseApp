@@ -18,7 +18,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.loic.morseapp.R
 import com.loic.morseapp.morseplayer.*
 import com.loic.morseapp.util.SingleToast
-import kotlinx.android.synthetic.main.activity_drawer.*
+import kotlinx.android.synthetic.main.activity_main.*
 
 /**
  * Abstract Fragment for every Fragment which need access to [MorsePlayer] and output menu.
