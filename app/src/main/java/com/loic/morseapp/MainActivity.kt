@@ -119,7 +119,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
         btCopyText.setOnClickListener {
             if (etAlphaTextToTranslate.text.isNotEmpty()) {
-                _clipBoardManager.primaryClip = ClipData.newPlainText("text", etAlphaTextToTranslate.text.toString());
+                _clipBoardManager.setPrimaryClip(ClipData.newPlainText("text", etAlphaTextToTranslate.text.toString()))
                 SingleToast.showShortToast(this, getString(R.string.text_copied))
             } else {
                 SingleToast.showShortToast(this, getString(R.string.nothing_to_copy))
@@ -128,7 +128,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
         btCopyMorseCode.setOnClickListener {
             if (etMorseCodeToTranslate.text.isNotEmpty()) {
-                _clipBoardManager.primaryClip = ClipData.newPlainText("text", etMorseCodeToTranslate.text.toString());
+                _clipBoardManager.setPrimaryClip(ClipData.newPlainText("text", etMorseCodeToTranslate.text.toString()))
                 SingleToast.showShortToast(this, getString(R.string.morse_copied))
             } else {
                 SingleToast.showShortToast(this, getString(R.string.nothing_to_copy))
