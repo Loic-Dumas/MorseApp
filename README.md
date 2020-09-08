@@ -22,5 +22,7 @@ RELEASE_KEY_ALIAS=XXX
 - **AndroidX**
 
 # Release
+- 1.0.1 - 2020/09/08 - update target API to Android 10
+
 - 1.0.0 - 2020/04/14 - First release
 
