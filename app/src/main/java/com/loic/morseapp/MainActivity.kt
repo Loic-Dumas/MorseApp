@@ -180,6 +180,7 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         }
         //endregion
 
+        versionNumber.text = "Version ${BuildConfig.VERSION_NAME} (${BuildConfig.VERSION_CODE})"
     }
 
     override fun onPause() {
