@@ -22,7 +22,7 @@ RELEASE_KEY_ALIAS=XXX
 - **AndroidX**
 
 # Release
-- 1.0.3 - 2022/07/13 - update target version
+- 1.0.3 - 2022/07/13 - update target version to 32
 
 - 1.0.2 - 2020/09/29 - update libraries
 
