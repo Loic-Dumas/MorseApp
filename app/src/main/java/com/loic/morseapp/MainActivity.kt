@@ -17,16 +17,24 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.material.snackbar.Snackbar
 import com.loic.morseapp.morseconverter.MorseConverter
 import com.loic.morseapp.morseconverter.UnexpectedCharacterException
 import com.loic.morseapp.morseconverter.UnknownMorseCharacterException
-import com.loic.morseapp.morseplayer.*
+import com.loic.morseapp.morseplayer.MorseFlashLightOldPlayer
+import com.loic.morseapp.morseplayer.MorseFlashLightPlayer
+import com.loic.morseapp.morseplayer.MorseFlashLightPlayerInterface
+import com.loic.morseapp.morseplayer.MorsePlayer
+import com.loic.morseapp.morseplayer.MorseSoundPlayer
+import com.loic.morseapp.morseplayer.MorseVibrationPlayer
 import com.loic.morseapp.util.SingleToast
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
@@ -55,10 +63,43 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     private lateinit var _vibrationStatus: Status
     private var _isRepeatMode = false
 
+    private lateinit var mainActivityCoordinatorLayout: CoordinatorLayout
+    private lateinit var etAlphaTextToTranslate: EditText
+    private lateinit var etMorseCodeToTranslate: EditText
+    private lateinit var btClearText: ImageView
+    private lateinit var btCopyText: ImageView
+    private lateinit var btCopyMorseCode: ImageView
+    private lateinit var btPasteMorseCode: ImageView
+    private lateinit var btPlayStop: ImageView
+    private lateinit var btRepeatMode: ImageView
+    private lateinit var btMorseKeyboardTi: ImageButton
+    private lateinit var btMorseKeyboardTa: ImageButton
+    private lateinit var btMorseKeyboardSpace: ImageButton
+    private lateinit var btMorseKeyboardReturn: ImageButton
+    private lateinit var btMorseKeyboardDelete: ImageButton
+    private lateinit var versionNumber: TextView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         title = getString(R.string.morse)
+
+        mainActivityCoordinatorLayout = findViewById(R.id.mainActivityCoordinatorLayout)
+        etAlphaTextToTranslate = findViewById(R.id.etAlphaTextToTranslate)
+        etMorseCodeToTranslate = findViewById(R.id.etMorseCodeToTranslate)
+        btClearText = findViewById(R.id.btClearText)
+        btCopyText = findViewById(R.id.btCopyText)
+        btCopyMorseCode = findViewById(R.id.btCopyMorseCode)
+        btPasteMorseCode = findViewById(R.id.btPasteMorseCode)
+        btPlayStop = findViewById(R.id.btPlayStop)
+        btRepeatMode = findViewById(R.id.btRepeatMode)
+        btMorseKeyboardTi = findViewById(R.id.btMorseKeyboardTi)
+        btMorseKeyboardTa = findViewById(R.id.btMorseKeyboardTa)
+        btMorseKeyboardSpace = findViewById(R.id.btMorseKeyboardSpace)
+        btMorseKeyboardReturn = findViewById(R.id.btMorseKeyboardReturn)
+        btMorseKeyboardDelete = findViewById(R.id.btMorseKeyboardDelete)
+        versionNumber = findViewById(R.id.versionNumber)
+
 
         // init status of each possible output, based of previous saved status in shared preferences
         val sharedPreferences = baseContext.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
@@ -188,11 +229,11 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
         val sharedPreferences = baseContext.getSharedPreferences(SHARED_PREF, Context.MODE_PRIVATE)
         sharedPreferences.edit()
-                .putString(SHARED_PREF_FLASHLIGHT, _flashStatus.toString())
-                .putString(SHARED_PREF_SOUND, _soundStatus.toString())
-                .putString(SHARED_PREF_VIBRATION, _vibrationStatus.toString())
-                .putBoolean(SHARED_PREF_REPEAT_MODE_ACTIVATED, _isRepeatMode)
-                .apply()
+            .putString(SHARED_PREF_FLASHLIGHT, _flashStatus.toString())
+            .putString(SHARED_PREF_SOUND, _soundStatus.toString())
+            .putString(SHARED_PREF_VIBRATION, _vibrationStatus.toString())
+            .putBoolean(SHARED_PREF_REPEAT_MODE_ACTIVATED, _isRepeatMode)
+            .apply()
     }
 
     override fun onDestroy() {
@@ -261,41 +302,49 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
                         _morsePlayer.removeMorseOutputPlayer(_morseFlashPlayer)
                         _flashStatus = Status.OFF
                     }
+
                     Status.OFF -> {
                         addFlashControllerOrRequestPermission(true)
                     }
+
                     Status.UNAVAILABLE -> {
                         SingleToast.showShortToast(this, "Flash not available")
                     }
                 }
                 updateFlashLightMenuIcon()
             }
+
             R.id.action_sound -> {
                 when (_soundStatus) {
                     Status.ON -> {
                         _morsePlayer.removeMorseOutputPlayer(_morseSoundPlayer)
                         _soundStatus = Status.OFF
                     }
+
                     Status.OFF -> {
                         _morsePlayer.addMorseOutputPlayer(_morseSoundPlayer)
                         _soundStatus = Status.ON
                     }
+
                     Status.UNAVAILABLE -> {
                         SingleToast.showShortToast(this, "Sound not available")
                     }
                 }
                 updateSoundMenuIcon()
             }
+
             R.id.action_vibration -> {
                 when (_vibrationStatus) {
                     Status.ON -> {
                         _morsePlayer.removeMorseOutputPlayer(_morseVibrationPlayer)
                         _vibrationStatus = Status.OFF
                     }
+
                     Status.OFF -> {
                         _morsePlayer.addMorseOutputPlayer(_morseVibrationPlayer)
                         _vibrationStatus = Status.ON
                     }
+
                     Status.UNAVAILABLE -> {
                         SingleToast.showShortToast(this, "Vibration not available")
                     }
@@ -359,10 +408,10 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
                     if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
                         if (forceRequest) {
                             Snackbar.make(mainActivityCoordinatorLayout, R.string.camera_required, Snackbar.LENGTH_LONG)
-                                    .setAction("Allow") {
-                                        ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
-                                    }
-                                    .show()
+                                .setAction("Allow") {
+                                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
+                                }
+                                .show()
                         }
                     } else {
                         ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.CAMERA), CAMERA_PERMISSION_REQUEST_CODE)
