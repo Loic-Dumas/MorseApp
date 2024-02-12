@@ -20,11 +20,11 @@ android {
         }
     }
 
-    compileSdkVersion 32
+    compileSdkVersion 34
     defaultConfig {
         applicationId "com.loic.morseapp"
         minSdkVersion 16
-        targetSdkVersion 32
+        targetSdkVersion 34
         multiDexEnabled true
         versionCode 6
         versionName "1.0.3"
