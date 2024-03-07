@@ -1,28 +1,48 @@
 package com.loic.morseapp.morseplayer
 
+import android.content.ContentResolver
 import android.content.Context
-import com.google.android.exoplayer2.Player
-import com.google.android.exoplayer2.SimpleExoPlayer
-import com.google.android.exoplayer2.source.ProgressiveMediaSource
-import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
-import com.google.android.exoplayer2.upstream.RawResourceDataSource
-import com.google.android.exoplayer2.util.Util
+import android.net.Uri
+import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
+import androidx.media3.common.Player
+import androidx.media3.exoplayer.ExoPlayer
 import com.loic.morseapp.R
 
-class MorseSoundPlayer(context: Context) : MorsePlayer.MorseOutputPlayer {
 
-    private val _context = context
-    private val _dataSourceFactory = DefaultDataSourceFactory(context,
-            Util.getUserAgent(context, context.getString(R.string.app_name)))
-    private val _videoSource = ProgressiveMediaSource.Factory(_dataSourceFactory)
-            .createMediaSource(RawResourceDataSource.buildRawResourceUri(R.raw.morse_sound_1sec))
+class MorseSoundPlayer(private val _context: Context) : MorsePlayer.MorseOutputPlayer {
 
-    private var _player: SimpleExoPlayer? = null
+
+    private var _player: ExoPlayer? = null
 
     override fun onPlayerAdded() {
-        _player = SimpleExoPlayer.Builder(_context).build()
-        _player?.prepare(_videoSource)
+        _player = ExoPlayer.Builder(_context).build()
+        _player?.setMediaItem(getMediaItem())
+        _player?.prepare()
         _player?.repeatMode = Player.REPEAT_MODE_ALL
+    }
+
+
+    private fun getMediaItem(): MediaItem {
+
+        val mmd = MediaMetadata.Builder()
+            .setTitle("Morse")
+            .setArtist("Hector")
+            .build()
+
+        val rawResourceUri = Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE +
+                "://" + _context.packageName + "/" + R.raw.morse_sound_1sec)
+
+        val rmd = MediaItem.RequestMetadata.Builder()
+            .setMediaUri(rawResourceUri)
+            .build()
+
+        return MediaItem.Builder()
+            .setMediaId("123")
+            .setMediaMetadata(mmd)
+            .setRequestMetadata(rmd)
+            .build()
+
     }
 
     override fun onPlayerRemoved() {

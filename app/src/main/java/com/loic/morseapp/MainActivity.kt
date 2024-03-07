@@ -50,7 +50,8 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
 
     private val _morsePlayer = MorsePlayer()
     private val _morseFlashPlayer: MorseFlashLightPlayerInterface by lazy { getCameraController() }
-    private val _morseSoundPlayer: MorseSoundPlayer by lazy { MorseSoundPlayer(this) }
+    // TODO Fix player
+//    private val _morseSoundPlayer: MorseSoundPlayer by lazy { MorseSoundPlayer(this) }
     private val _morseVibrationPlayer: MorseVibrationPlayer by lazy { MorseVibrationPlayer(this) }
 
     private var _alphaEditTextHasFocus = false
@@ -123,7 +124,8 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
         // Add sound morse player
         if (packageManager.hasSystemFeature(PackageManager.FEATURE_AUDIO_OUTPUT)) {
             if (_soundStatus == Status.ON) {
-                _morsePlayer.addMorseOutputPlayer(_morseSoundPlayer)
+                // TODO Fix player
+//                _morsePlayer.addMorseOutputPlayer(_morseSoundPlayer)
             }
         } else {
             _soundStatus = Status.UNAVAILABLE
@@ -317,13 +319,15 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
             R.id.action_sound -> {
                 when (_soundStatus) {
                     Status.ON -> {
-                        _morsePlayer.removeMorseOutputPlayer(_morseSoundPlayer)
-                        _soundStatus = Status.OFF
+                        // TODO Fix player
+//                        _morsePlayer.removeMorseOutputPlayer(_morseSoundPlayer)
+//                        _soundStatus = Status.OFF
                     }
 
                     Status.OFF -> {
-                        _morsePlayer.addMorseOutputPlayer(_morseSoundPlayer)
-                        _soundStatus = Status.ON
+                        // TODO Fix player
+//                        _morsePlayer.addMorseOutputPlayer(_morseSoundPlayer)
+//                        _soundStatus = Status.ON
                     }
 
                     Status.UNAVAILABLE -> {
@@ -364,11 +368,13 @@ class MainActivity : AppCompatActivity(), MorsePlayer.MorseOutputPlayer {
     }
 
     private fun updateSoundMenuIcon() {
-        when (_soundStatus) {
-            Status.ON -> _menu?.findItem(R.id.action_sound)?.setIcon(R.drawable.ic_sound_on)
-            Status.OFF -> _menu?.findItem(R.id.action_sound)?.setIcon(R.drawable.ic_sound_off)
-            Status.UNAVAILABLE -> _menu?.findItem(R.id.action_sound)?.icon = getTransparentIcon(R.drawable.ic_sound_off)
-        }
+//        when (_soundStatus) {
+//            Status.ON -> _menu?.findItem(R.id.action_sound)?.setIcon(R.drawable.ic_sound_on)
+//            Status.OFF -> _menu?.findItem(R.id.action_sound)?.setIcon(R.drawable.ic_sound_off)
+//            Status.UNAVAILABLE -> _menu?.findItem(R.id.action_sound)?.icon = getTransparentIcon(R.drawable.ic_sound_off)
+//        }
+        // TODO Fix player
+            _menu?.findItem(R.id.action_sound)?.icon = getTransparentIcon(R.drawable.ic_sound_off)
     }
 
     private fun updateVibrationMenuIcon() {
