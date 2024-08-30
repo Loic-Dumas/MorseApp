@@ -12,7 +12,6 @@ import com.loic.morseapp.R
 
 class MorseSoundPlayer(private val _context: Context) : MorsePlayer.MorseOutputPlayer {
 
-
     private var _player: ExoPlayer? = null
 
     override fun onPlayerAdded() {
