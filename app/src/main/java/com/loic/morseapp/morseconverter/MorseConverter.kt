@@ -82,7 +82,7 @@ class MorseConverter {
         fun convertAlphaToMorse(alphaText: String): String {
             var result = ""
 
-            for (letter in alphaText.toLowerCase(Locale.getDefault())) {
+            for (letter in alphaText.lowercase(Locale.getDefault())) {
                 val morseLetter = alphaToMorseArray[letter]
                 result += when {
                     morseLetter != null -> "$morseLetter " // the letter is in the morse dictionary
