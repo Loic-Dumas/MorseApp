@@ -22,6 +22,8 @@ RELEASE_KEY_ALIAS=XXX
 - **AndroidX**
 
 # Release
+- 1.0.5 - 2025/03/11 - update target version to 35 + Fix vibrator
+
 - 1.0.4 - 2024/04/02 - update target version to 34
 
 - 1.0.3 - 2022/07/13 - update target version to 32
